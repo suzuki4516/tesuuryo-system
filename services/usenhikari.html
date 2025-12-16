@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USEN光 plus 手数料表</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .service-page {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #4a90d9;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .service-title {
+            font-size: 28px;
+            color: #333;
+            border-bottom: 3px solid #1a237e;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+        .section-title {
+            font-size: 18px;
+            color: #1a237e;
+            margin: 30px 0 15px;
+            padding-left: 12px;
+            border-left: 4px solid #1a237e;
+        }
+        .subsection-title {
+            font-size: 15px;
+            color: #333;
+            margin: 20px 0 10px;
+            background: #e8eaf6;
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+        .fee-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+        .fee-table th {
+            background: #1a237e;
+            color: white;
+            padding: 10px 12px;
+            text-align: center;
+            border: 1px solid #0d1642;
+        }
+        .fee-table td {
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        .fee-table tr:nth-child(even) {
+            background: #f5f5f5;
+        }
+        .fee-table .price {
+            font-weight: bold;
+            color: #c62828;
+        }
+        .fee-table .row-header {
+            background: #e8eaf6;
+            font-weight: bold;
+            text-align: left;
+        }
+        .info-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 5px;
+        }
+        .info-section h4 {
+            margin: 0 0 10px 0;
+            color: #1a237e;
+        }
+        .info-section ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .info-section li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+            color: #555;
+        }
+        .warning-box {
+            background: #fff3e0;
+            border: 1px solid #ff9800;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .warning-box h4 {
+            margin: 0 0 10px 0;
+            color: #e65100;
+        }
+        .warning-box ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .warning-box li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+            color: #555;
+        }
+        .note-text {
+            font-size: 12px;
+            color: #666;
+            margin: 10px 0;
+        }
+        .red-text {
+            color: #c62828;
+        }
+        .tax-note {
+            color: #c62828;
+            font-size: 14px;
+            text-align: right;
+            margin-bottom: 15px;
+        }
+        .monthly-info {
+            font-size: 12px;
+            color: #666;
+            margin-top: 5px;
+        }
+        /* 割引コントロール */
+        .discount-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 5px;
+        }
+        .discount-controls label {
+            font-weight: bold;
+        }
+        .discount-controls select {
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .discount-controls button {
+            padding: 8px 20px;
+            font-size: 14px;
+            background: #1a237e;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .discount-controls button:hover {
+            background: #0d1642;
+        }
+        .discount-note {
+            color: #c62828;
+            font-weight: bold;
+            margin-left: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="service-page">
+        <a href="../index.html" class="back-link">← 一覧に戻る</a>
+
+        <h1 class="service-title">USEN光 plus 手数料表</h1>
+
+        <!-- USEN光 plus 手数料 -->
+        <h2 class="section-title">USEN光 plus／手数料条件</h2>
+        <p class="tax-note">＜全て税抜表記となります＞</p>
+
+        <!-- 割引コントロール（PDF出力時は非表示） -->
+        <div class="discount-controls" id="discount-controls">
+            <label for="page-discount-rate">%変更：</label>
+            <select id="page-discount-rate">
+                <option value="0">なし</option>
+                <option value="20">20%</option>
+                <option value="25">25%</option>
+                <option value="30">30%</option>
+                <option value="35">35%</option>
+                <option value="40">40%</option>
+                <option value="45">45%</option>
+                <option value="50">50%</option>
+                <option value="55">55%</option>
+                <option value="60">60%</option>
+                <option value="65">65%</option>
+                <option value="70">70%</option>
+                <option value="75">75%</option>
+            </select>
+            <button id="apply-discount-btn">割引適用</button>
+            <span class="discount-note" id="discount-note" style="display: none;">※割引適用中</span>
+        </div>
+
+        <h3 class="subsection-title">＜USEN光 plus 手数料条件(新規 2年割)＞</h3>
+        <table class="fee-table">
+            <thead>
+                <tr>
+                    <th>商品名</th>
+                    <th>プラン・タイプ</th>
+                    <th>手数料</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>USEN光 plus（新規）</td>
+                    <td>全プラン</td>
+                    <td class="price">45,000円</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="monthly-info">月額料金（E/U）：ファミリー 4,300円 / マンション（プラン1） 3,300円</p>
+
+        <h3 class="subsection-title">＜USEN光 plus 手数料条件(転用 2年割)＞</h3>
+        <table class="fee-table">
+            <thead>
+                <tr>
+                    <th>商品名</th>
+                    <th>プラン・タイプ</th>
+                    <th>手数料</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>USEN光 plus（転用）</td>
+                    <td>全プラン</td>
+                    <td class="price">14,000円</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="monthly-info">月額料金（E/U）：ファミリー 4,180円 / マンション（プラン1） 3,180円</p>
+
+        <h3 class="subsection-title">＜USEN光 plus 手数料条件(事業者変更 2年割)＞</h3>
+        <table class="fee-table">
+            <thead>
+                <tr>
+                    <th>商品名</th>
+                    <th>プラン・タイプ</th>
+                    <th>手数料</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>USEN光 plus（事業者変更）</td>
+                    <td>全プラン</td>
+                    <td class="price">14,000円</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="monthly-info">月額料金（E/U）：ファミリー 4,180円 / マンション（プラン1） 3,180円</p>
+
+        <div class="info-section">
+            <h4>■支払条件 / タイミング</h4>
+            <ul>
+                <li>手数料：＜新規＞工事完了 / ＜転用＞転用完了月の翌月末支払い</li>
+                <li>コラボの為、NTTからの異動情報によって異なります。</li>
+                <li>※月末が金融機関休業日の場合、翌営業日の支払いとなります。</li>
+            </ul>
+        </div>
+
+        <div class="warning-box">
+            <h4>■戻入条件</h4>
+            <ul>
+                <li>媒介された顧客の本商品の開通済み含む6ヵ月以内に、当該本商品の利用契約が解約された場合。</li>
+                <li class="red-text">顧客の未払いにより強制解約を実施し、かつ当該解約事由が開通月＋6カ月以内に発生した場合。</li>
+                <li>当社が不正取次とみなした場合</li>
+                <li>初期費用のある本商品において、ショットの手数料の初回分をお支払い後、顧客より弊社に対して初期費用の入金が行われない場合。</li>
+            </ul>
+        </div>
+
+        <!-- USENひかり電話 -->
+        <h2 class="section-title">USENひかり電話／手数料条件</h2>
+        <p class="tax-note">＜全て税抜表記となります＞</p>
+
+        <h3 class="subsection-title">＜USENひかり電話 手数料条件（西日本のみ）＞</h3>
+        <table class="fee-table">
+            <thead>
+                <tr>
+                    <th>項目</th>
+                    <th>販売手数料（税抜）</th>
+                    <th>備考</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="row-header">ショット手数料</td>
+                    <td class="price">2,500円/チャネル（工事完了）</td>
+                    <td>新規取次のみ<span class="red-text">（転用は対象外）</span></td>
+                </tr>
+                <tr>
+                    <td class="row-header">継続手数料</td>
+                    <td>無し</td>
+                    <td>-</td>
+                </tr>
+            </tbody>
+        </table>
+        <p class="note-text">※USENひかり電話オフィスの販売手数料は、お客様がご利用のチャネル数でのお支払いとなります。</p>
+
+        <div class="info-section">
+            <h4>【対象商材】</h4>
+            <ul>
+                <li>USEN光 plus</li>
+                <li>「ひかり電話オフィスタイプ」</li>
+                <li>「ひかり電話オフィスプラス」</li>
+            </ul>
+            <h4>【支払条件・支払サイト】</h4>
+            <p style="margin-left: 20px;">USEN光 plusの支払条件、支払サイトに準ずる</p>
+            <h4>【戻入条件】</h4>
+            <p style="margin-left: 20px;">USEN光 plusの戻入条件に準ずる</p>
+            <h4>【注意点】</h4>
+            <p style="margin-left: 20px;">回線との同時申込に限ります（既設回線への追設エントリー不可）</p>
+        </div>
+
+        <!-- USENひかり電話通話料オプション -->
+        <h2 class="section-title">USENひかり電話通話料オプション／手数料条件</h2>
+        <p class="tax-note">＜全て税抜表記となります＞</p>
+
+        <h3 class="subsection-title">＜USENひかり電話＋通話料オプション 手数料条件＞</h3>
+        <table class="fee-table">
+            <thead>
+                <tr>
+                    <th>項目</th>
+                    <th>販売手数料（税抜）</th>
+                    <th>備考</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="row-header">ショット手数料</td>
+                    <td class="price">15,000円/契約</td>
+                    <td>回線とひかり電話セットの場合のみ</td>
+                </tr>
+                <tr>
+                    <td class="row-header">継続手数料</td>
+                    <td>無し</td>
+                    <td>-</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="info-section">
+            <h4>【対象商材】</h4>
+            <ul>
+                <li>USEN光 plus ファミリー／マンション</li>
+                <li>※ひかり電話利用顧客に限る</li>
+            </ul>
+            <h4>【支払条件・支払サイト】</h4>
+            <p style="margin-left: 20px;">USEN光 plusの支払条件、支払サイトに準ずる</p>
+            <h4>【戻入条件】</h4>
+            <p style="margin-left: 20px;">1年以内の解約は戻入対象とする<br>※回線・ひかり電話・OP単体共に同条件</p>
+            <h4>【注意点】</h4>
+            <p style="margin-left: 20px;">回線との同時申込に限ります（既設回線への追設エントリー不可）</p>
+        </div>
+
+        <!-- USEN光24時間出張修理オプション -->
+        <h2 class="section-title">USEN光24時間出張修理オプション／手数料条件</h2>
+        <p class="tax-note">＜全て税抜表記となります＞</p>
+
+        <h3 class="subsection-title">＜USEN光24時間出張修理オプション 手数料条件＞</h3>
+        <table class="fee-table">
+            <thead>
+                <tr>
+                    <th>項目</th>
+                    <th>販売手数料（税抜）</th>
+                    <th>支払サイト</th>
+                    <th>備考</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="row-header">ショット手数料</td>
+                    <td class="price">NTT東日本エリア 6,000円/契約</td>
+                    <td>開通月から8カ月目の末日</td>
+                    <td>回線とのセット獲得が条件<br>新規取次のみ<span class="red-text">（転用は対象外）</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="info-section">
+            <h4>【対象商材】</h4>
+            <ul>
+                <li>USEN光 plus</li>
+                <li>「USEN光24時間出張修理オプション」</li>
+            </ul>
+            <h4>【支払条件・支払サイト】</h4>
+            <p style="margin-left: 20px;">NTT東日本エリア：開通月の翌月から起算して、6カ月後の末日時点で継続していることが確認できない場合、支払い対象外になります。</p>
+            <h4>【戻入条件】</h4>
+            <p style="margin-left: 20px;">●基本USEN光 plusの戻入条件に準ずる</p>
+            <h4>【注意点】</h4>
+            <p style="margin-left: 20px;">回線との同時申込に限ります（既設回線への追設エントリー不可）</p>
+        </div>
+
+        <div style="margin-top: 30px; text-align: center;">
+            <button id="pdf-export-btn" style="background: #1a237e; color: white; border: none; padding: 12px 30px; font-size: 16px; border-radius: 5px; cursor: pointer;">このページをPDF出力</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="pdf-export.js"></script>
+    <script>
+        document.getElementById('pdf-export-btn').addEventListener('click', function() {
+            exportPageToPDF('USEN光 plus');
+        });
+
+        // 割引適用ボタン
+        document.getElementById('apply-discount-btn').addEventListener('click', function() {
+            const discount = parseInt(document.getElementById('page-discount-rate').value) || 0;
+            if (discount > 0) {
+                applyDiscountToPage(discount);
+                document.getElementById('discount-note').style.display = 'inline';
+                document.getElementById('discount-note').textContent = '※' + discount + '%割引適用中';
+                this.disabled = true;
+                this.textContent = '適用済み';
+            }
+        });
+    </script>
+</body>
+</html>

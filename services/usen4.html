@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>USEN商材4種 手数料表</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .service-page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #4a90d9;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .service-title {
+            font-size: 28px;
+            color: #333;
+            border-bottom: 3px solid #003399;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+        .section-title {
+            font-size: 18px;
+            color: #003399;
+            margin: 30px 0 15px;
+            padding-left: 12px;
+            border-left: 4px solid #003399;
+        }
+        .subsection-title {
+            font-size: 15px;
+            color: #333;
+            margin: 20px 0 10px;
+            background: #e3f2fd;
+            padding: 8px 12px;
+            border-radius: 4px;
+        }
+        .fee-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 12px;
+        }
+        .fee-table th {
+            background: #003399;
+            color: white;
+            padding: 8px 10px;
+            text-align: center;
+            border: 1px solid #002277;
+        }
+        .fee-table td {
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .fee-table tr:nth-child(even) {
+            background: #f5f5f5;
+        }
+        .fee-table .price {
+            font-weight: bold;
+            color: #c62828;
+        }
+        .fee-table .row-header {
+            background: #e8eaf6;
+            font-weight: bold;
+            text-align: left;
+        }
+        .compact-table {
+            font-size: 10px;
+        }
+        .compact-table th, .compact-table td {
+            padding: 4px 6px;
+        }
+        .unit-note {
+            text-align: right;
+            font-size: 12px;
+            color: #666;
+            margin: 5px 0 10px;
+        }
+        .discount-table {
+            width: auto;
+            margin: 0 auto 20px;
+        }
+        .discount-table th, .discount-table td {
+            padding: 4px 12px;
+            font-size: 11px;
+        }
+        .area-label {
+            font-weight: bold;
+            color: #003399;
+            margin-bottom: 5px;
+        }
+        .table-scroll {
+            overflow-x: auto;
+            margin-bottom: 20px;
+        }
+        .gmv-table {
+            font-size: 9px;
+        }
+        .gmv-table th, .gmv-table td {
+            padding: 3px 5px;
+            white-space: nowrap;
+        }
+        .gmv-table .unavailable {
+            background: #ffcdd2;
+            color: #c62828;
+            font-size: 8px;
+        }
+        .gmv-table .available {
+            background: #fff9c4;
+        }
+        .info-box {
+            background: #f5f5f5;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 15px 0;
+        }
+        .info-box p {
+            margin: 0;
+            font-size: 12px;
+            color: #555;
+        }
+        /* 割引コントロール */
+        .discount-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 5px;
+        }
+        .discount-controls label {
+            font-weight: bold;
+        }
+        .discount-controls select {
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .discount-controls button {
+            padding: 8px 20px;
+            font-size: 14px;
+            background: #003399;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .discount-controls button:hover {
+            background: #002277;
+        }
+        .discount-note {
+            color: #c62828;
+            font-weight: bold;
+            margin-left: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="service-page">
+        <a href="../index.html" class="back-link">← 一覧に戻る</a>
+
+        <h1 class="service-title">USEN商材4種 手数料表</h1>
+
+        <!-- 割引コントロール（PDF出力時は非表示） -->
+        <div class="discount-controls" id="discount-controls">
+            <label for="page-discount-rate">%変更：</label>
+            <select id="page-discount-rate">
+                <option value="0">なし</option>
+                <option value="20">20%</option>
+                <option value="25">25%</option>
+                <option value="30">30%</option>
+                <option value="35">35%</option>
+                <option value="40">40%</option>
+                <option value="45">45%</option>
+                <option value="50">50%</option>
+                <option value="55">55%</option>
+                <option value="60">60%</option>
+                <option value="65">65%</option>
+                <option value="70">70%</option>
+                <option value="75">75%</option>
+            </select>
+            <button id="apply-discount-btn">割引適用</button>
+            <span class="discount-note" id="discount-note" style="display: none;">※割引適用中</span>
+        </div>
+
+        <!-- メイン手数料テーブル -->
+        <h2 class="section-title">手数料一覧</h2>
+        <table class="fee-table">
+            <thead>
+                <tr>
+                    <th>商材名</th>
+                    <th>単位</th>
+                    <th>売価</th>
+                    <th>手数料</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>USEN 光plus（転用/事変のみ）</td>
+                    <td>契約</td>
+                    <td class="no-discount">F:4100 M3100</td>
+                    <td class="price">7,000円</td>
+                </tr>
+                <tr>
+                    <td>USEN 光plus（新設_全プラン）</td>
+                    <td>契約</td>
+                    <td class="no-discount">F:4100 M3100</td>
+                    <td class="price">20,000円</td>
+                </tr>
+                <tr>
+                    <td>USEN 光plus（転用/事変のみ）</td>
+                    <td>契約</td>
+                    <td class="no-discount">F:3800 M2800</td>
+                    <td class="price">3,000円</td>
+                </tr>
+                <tr>
+                    <td>USEN 光plus（新設_全プラン）</td>
+                    <td>契約</td>
+                    <td class="no-discount">F:3800 M2800</td>
+                    <td class="price">3,000円</td>
+                </tr>
+                <tr>
+                    <td>U-POWER</td>
+                    <td>口数</td>
+                    <td>-</td>
+                    <td>下記テーブル参照</td>
+                </tr>
+                <tr>
+                    <td>USEN MUSIC(Wi-Fiプラン)</td>
+                    <td>契約</td>
+                    <td>-</td>
+                    <td class="price">9,000円</td>
+                </tr>
+                <tr>
+                    <td>USEN MUSIC(LTEプラン)</td>
+                    <td>契約</td>
+                    <td>-</td>
+                    <td class="price">5,500円</td>
+                </tr>
+                <tr>
+                    <td>USENPAY</td>
+                    <td>契約</td>
+                    <td>-</td>
+                    <td>下記テーブル参照</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- お支払い条件 -->
+        <h2 class="section-title">お支払い条件</h2>
+        <table class="fee-table">
+            <thead>
+                <tr>
+                    <th>商材名</th>
+                    <th>支払要件</th>
+                    <th>支払日</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>USEN 光plus（転用/事変/新設）</td>
+                    <td>工事完了</td>
+                    <td>工事完了日翌月末日</td>
+                </tr>
+                <tr>
+                    <td>U-POWER</td>
+                    <td>マッチング完了</td>
+                    <td>マッチング完了翌月末日</td>
+                </tr>
+                <tr>
+                    <td>USEN MUSIC(Wi-Fiプラン)</td>
+                    <td>受領確認（配送完了）</td>
+                    <td>配送完了日翌月末日</td>
+                </tr>
+                <tr>
+                    <td>USEN MUSIC(LTEプラン)</td>
+                    <td>受領確認（配送完了）</td>
+                    <td>配送完了日翌月末日</td>
+                </tr>
+                <tr>
+                    <td>USENPAY</td>
+                    <td>受領確認（配送完了）</td>
+                    <td>配送完了日翌月末日</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- U-POWER 電灯 -->
+        <h2 class="section-title">U-POWER 電灯手数料</h2>
+        <h3 class="subsection-title">想定明細料金（税込）ベース手数料（税抜表示）単位：/1口</h3>
+        <div class="table-scroll">
+            <table class="fee-table compact-table">
+                <thead>
+                    <tr>
+                        <th>想定明細料金（税込）</th>
+                        <th>北海道</th>
+                        <th>東北</th>
+                        <th>東京</th>
+                        <th>北陸</th>
+                        <th>中部</th>
+                        <th>関西</th>
+                        <th>中国</th>
+                        <th>四国</th>
+                        <th>九州</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="row-header">7千円未満</td><td class="price">対象外</td><td class="price">対象外</td><td class="price">対象外</td><td class="price">対象外</td><td class="price">対象外</td><td class="price">対象外</td><td class="price">対象外</td><td class="price">対象外</td><td class="price">対象外</td></tr>
+                    <tr><td class="row-header">7千円〜8千5百円未満</td><td class="price">6000</td><td class="price">1600</td><td class="price">4000</td><td class="price">対象外</td><td class="price">2400</td><td class="price">1800</td><td class="price">2000</td><td class="price">2000</td><td class="price">800</td></tr>
+                    <tr><td class="row-header">8千5百円〜1万円未満</td><td class="price">8000</td><td class="price">6000</td><td class="price">6000</td><td class="price">1600</td><td class="price">4800</td><td class="price">5600</td><td class="price">6000</td><td class="price">4000</td><td class="price">4000</td></tr>
+                    <tr><td class="row-header">1万円〜1万2千円未満</td><td class="price">10000</td><td class="price">6000</td><td class="price">8000</td><td class="price">1600</td><td class="price">4800</td><td class="price">6000</td><td class="price">6000</td><td class="price">4000</td><td class="price">4000</td></tr>
+                    <tr><td class="row-header">1万2千円〜1万4千円未満</td><td class="price">10000</td><td class="price">8000</td><td class="price">8000</td><td class="price">3200</td><td class="price">8000</td><td class="price">8000</td><td class="price">8000</td><td class="price">6000</td><td class="price">8000</td></tr>
+                    <tr><td class="row-header">1万4千円〜1万6千円未満</td><td class="price">10000</td><td class="price">10000</td><td class="price">10000</td><td class="price">4800</td><td class="price">10000</td><td class="price">10000</td><td class="price">10000</td><td class="price">8000</td><td class="price">10000</td></tr>
+                    <tr><td class="row-header">1万6千円〜1万8千円未満</td><td class="price">14000</td><td class="price">14000</td><td class="price">14000</td><td class="price">6400</td><td class="price">14000</td><td class="price">18000</td><td class="price">18000</td><td class="price">10000</td><td class="price">14000</td></tr>
+                    <tr><td class="row-header">1万8千円〜2万円未満</td><td class="price">22000</td><td class="price">22000</td><td class="price">18000</td><td class="price">8000</td><td class="price">18000</td><td class="price">26000</td><td class="price">26000</td><td class="price">12000</td><td class="price">18000</td></tr>
+                    <tr><td class="row-header">2万円〜2万2千円未満</td><td class="price">30000</td><td class="price">30000</td><td class="price">26000</td><td class="price">9600</td><td class="price">22000</td><td class="price">28000</td><td class="price">30000</td><td class="price">14000</td><td class="price">26000</td></tr>
+                    <tr><td class="row-header">2万2千円〜2万4千円未満</td><td class="price">34000</td><td class="price">34000</td><td class="price">28000</td><td class="price">11200</td><td class="price">22000</td><td class="price">32000</td><td class="price">34000</td><td class="price">16000</td><td class="price">28000</td></tr>
+                    <tr><td class="row-header">2万4千円〜2万6千円未満</td><td class="price">36000</td><td class="price">36000</td><td class="price">30000</td><td class="price">12800</td><td class="price">24000</td><td class="price">34000</td><td class="price">36000</td><td class="price">18000</td><td class="price">30000</td></tr>
+                    <tr><td class="row-header">2万6千円〜2万8千円未満</td><td class="price">38000</td><td class="price">38000</td><td class="price">34000</td><td class="price">14400</td><td class="price">28000</td><td class="price">36000</td><td class="price">38000</td><td class="price">20000</td><td class="price">34000</td></tr>
+                    <tr><td class="row-header">2万8千円〜3万円未満</td><td class="price">40000</td><td class="price">40000</td><td class="price">38000</td><td class="price">16000</td><td class="price">32000</td><td class="price">38000</td><td class="price">40000</td><td class="price">22000</td><td class="price">38000</td></tr>
+                    <tr><td class="row-header">3万円〜3万2千円未満</td><td class="price">42000</td><td class="price">42000</td><td class="price">40000</td><td class="price">17600</td><td class="price">34000</td><td class="price">40000</td><td class="price">42000</td><td class="price">24000</td><td class="price">40000</td></tr>
+                    <tr><td class="row-header">3万2千円〜3万4千円未満</td><td class="price">44000</td><td class="price">44000</td><td class="price">42000</td><td class="price">19200</td><td class="price">38000</td><td class="price">42000</td><td class="price">44000</td><td class="price">26000</td><td class="price">42000</td></tr>
+                    <tr><td class="row-header">3万4千円〜3万6千円未満</td><td class="price">46000</td><td class="price">46000</td><td class="price">44000</td><td class="price">20800</td><td class="price">40000</td><td class="price">44000</td><td class="price">46000</td><td class="price">28000</td><td class="price">44000</td></tr>
+                    <tr><td class="row-header">3万6千円〜3万8千円未満</td><td class="price">48000</td><td class="price">48000</td><td class="price">46000</td><td class="price">22400</td><td class="price">42000</td><td class="price">46000</td><td class="price">48000</td><td class="price">30000</td><td class="price">46000</td></tr>
+                    <tr><td class="row-header">3万8千円〜4万円未満</td><td class="price">50000</td><td class="price">50000</td><td class="price">48000</td><td class="price">24000</td><td class="price">44000</td><td class="price">48000</td><td class="price">50000</td><td class="price">32000</td><td class="price">48000</td></tr>
+                    <tr><td class="row-header">4万円〜5万円未満</td><td class="price">52000</td><td class="price">52000</td><td class="price">52000</td><td class="price">32000</td><td class="price">48000</td><td class="price">50000</td><td class="price">52000</td><td class="price">34000</td><td class="price">52000</td></tr>
+                    <tr><td class="row-header">5万円〜6万円未満</td><td class="price">60000</td><td class="price">60000</td><td class="price">60000</td><td class="price">40000</td><td class="price">52000</td><td class="price">58000</td><td class="price">60000</td><td class="price">40000</td><td class="price">60000</td></tr>
+                    <tr><td class="row-header">6万円〜7万円未満</td><td class="price">68000</td><td class="price">68000</td><td class="price">68000</td><td class="price">48000</td><td class="price">56000</td><td class="price">66000</td><td class="price">68000</td><td class="price">48000</td><td class="price">68000</td></tr>
+                    <tr><td class="row-header">7万円〜8万円未満</td><td class="price">76000</td><td class="price">76000</td><td class="price">76000</td><td class="price">56000</td><td class="price">60000</td><td class="price">74000</td><td class="price">76000</td><td class="price">56000</td><td class="price">76000</td></tr>
+                    <tr><td class="row-header">8万円〜9万円未満</td><td class="price">84000</td><td class="price">84000</td><td class="price">84000</td><td class="price">64000</td><td class="price">64000</td><td class="price">82000</td><td class="price">84000</td><td class="price">64000</td><td class="price">84000</td></tr>
+                    <tr><td class="row-header">9万円〜10万円未満</td><td class="price">92000</td><td class="price">92000</td><td class="price">92000</td><td class="price">72000</td><td class="price">68000</td><td class="price">90000</td><td class="price">92000</td><td class="price">72000</td><td class="price">92000</td></tr>
+                    <tr><td class="row-header">10万円以上</td><td class="price">100000</td><td class="price">100000</td><td class="price">100000</td><td class="price">80000</td><td class="price">80000</td><td class="price">98000</td><td class="price">100000</td><td class="price">80000</td><td class="price">100000</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- エリア別割引率 -->
+        <h3 class="subsection-title">エリア別 手数料割引率</h3>
+        <div style="display: flex; gap: 40px; flex-wrap: wrap; justify-content: center;">
+            <div>
+                <p class="area-label">中部、関西、九州</p>
+                <table class="fee-table discount-table">
+                    <thead>
+                        <tr>
+                            <th>月額電気料金の割引率</th>
+                            <th>手数料の割引率</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1%</td><td>4%</td></tr>
+                        <tr><td>2%</td><td>8%</td></tr>
+                        <tr><td>3%</td><td>12%</td></tr>
+                        <tr><td>4%</td><td>16%</td></tr>
+                        <tr><td>5%</td><td>20%</td></tr>
+                        <tr><td>6%</td><td>24%</td></tr>
+                        <tr><td>7%</td><td>28%</td></tr>
+                        <tr><td>8%</td><td>32%</td></tr>
+                        <tr><td>9%</td><td>36%</td></tr>
+                        <tr><td>10%</td><td>40%</td></tr>
+                        <tr><td>11%</td><td>43%</td></tr>
+                        <tr><td>12%</td><td>46%</td></tr>
+                        <tr><td>13%</td><td>49%</td></tr>
+                        <tr><td>14%</td><td>52%</td></tr>
+                        <tr><td>15%</td><td>55%</td></tr>
+                        <tr><td>16%</td><td>58%</td></tr>
+                        <tr><td>17%</td><td>61%</td></tr>
+                        <tr><td>18%</td><td>64%</td></tr>
+                        <tr><td>19%</td><td>67%</td></tr>
+                        <tr><td>20%</td><td>70%</td></tr>
+                        <tr><td>21%</td><td>73%</td></tr>
+                        <tr><td>22%</td><td>76%</td></tr>
+                        <tr><td>23%</td><td>79%</td></tr>
+                        <tr><td>24%</td><td>82%</td></tr>
+                        <tr><td>25%</td><td>85%</td></tr>
+                    </tbody>
+                </table>
+            </div>
+            <div>
+                <p class="area-label">北海道、東京、東北、北陸、中国、四国</p>
+                <table class="fee-table discount-table">
+                    <thead>
+                        <tr>
+                            <th>月額電気料金の割引率</th>
+                            <th>手数料の割引率</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr><td>1%</td><td>5%</td></tr>
+                        <tr><td>2%</td><td>10%</td></tr>
+                        <tr><td>3%</td><td>15%</td></tr>
+                        <tr><td>4%</td><td>20%</td></tr>
+                        <tr><td>5%</td><td>25%</td></tr>
+                        <tr><td>6%</td><td>30%</td></tr>
+                        <tr><td>7%</td><td>35%</td></tr>
+                        <tr><td>8%</td><td>40%</td></tr>
+                        <tr><td>9%</td><td>45%</td></tr>
+                        <tr><td>10%</td><td>50%</td></tr>
+                        <tr><td>11%</td><td>55%</td></tr>
+                        <tr><td>12%</td><td>60%</td></tr>
+                        <tr><td>13%</td><td>65%</td></tr>
+                        <tr><td>14%</td><td>70%</td></tr>
+                        <tr><td>15%</td><td>75%</td></tr>
+                        <tr><td>16%</td><td>80%</td></tr>
+                        <tr><td>17%</td><td>85%</td></tr>
+                        <tr><td>18%</td><td>90%</td></tr>
+                        <tr><td>19%</td><td>95%</td></tr>
+                        <tr><td>20%</td><td>100%</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <!-- U-POWER 動力 -->
+        <h2 class="section-title">U-POWER 動力手数料</h2>
+        <h3 class="subsection-title">契約電力 ベース手数料（税抜表示）単位：/1口</h3>
+        <div class="table-scroll">
+            <table class="fee-table compact-table">
+                <thead>
+                    <tr>
+                        <th>契約電力</th>
+                        <th>北海道</th>
+                        <th>東北</th>
+                        <th>東京</th>
+                        <th>北陸</th>
+                        <th>中部</th>
+                        <th>関西</th>
+                        <th>中国</th>
+                        <th>四国</th>
+                        <th>九州</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="row-header">0.5kW</td><td>対象外</td><td>対象外</td><td>対象外</td><td>対象外</td><td>対象外</td><td>対象外</td><td>対象外</td><td>対象外</td><td>対象外</td></tr>
+                    <tr><td class="row-header">1kW</td><td>対象外</td><td>対象外</td><td>対象外</td><td>対象外</td><td>対象外</td><td>対象外</td><td>対象外</td><td>対象外</td><td>対象外</td></tr>
+                    <tr><td class="row-header">2kW</td><td>対象外</td><td>対象外</td><td>対象外</td><td>対象外</td><td>対象外</td><td>対象外</td><td>対象外</td><td>対象外</td><td>対象外</td></tr>
+                    <tr><td class="row-header">3kW</td><td class="price">2400</td><td class="price">1600</td><td class="price">2400</td><td class="price">2000</td><td class="price">2000</td><td class="price">2000</td><td class="price">2000</td><td class="price">2000</td><td class="price">2000</td></tr>
+                    <tr><td class="row-header">4kW</td><td class="price">4800</td><td class="price">2000</td><td class="price">4800</td><td class="price">4000</td><td class="price">4000</td><td class="price">4000</td><td class="price">4000</td><td class="price">4000</td><td class="price">4000</td></tr>
+                    <tr><td class="row-header">5kW</td><td class="price">7200</td><td class="price">2800</td><td class="price">7200</td><td class="price">6400</td><td class="price">6000</td><td class="price">6000</td><td class="price">6000</td><td class="price">6000</td><td class="price">6000</td></tr>
+                    <tr><td class="row-header">6kW</td><td class="price">9600</td><td class="price">3200</td><td class="price">9600</td><td class="price">7600</td><td class="price">8000</td><td class="price">8000</td><td class="price">8000</td><td class="price">8000</td><td class="price">8000</td></tr>
+                    <tr><td class="row-header">7kW</td><td class="price">12000</td><td class="price">4000</td><td class="price">12000</td><td class="price">9200</td><td class="price">10000</td><td class="price">10000</td><td class="price">10000</td><td class="price">10000</td><td class="price">10000</td></tr>
+                    <tr><td class="row-header">8kW</td><td class="price">14400</td><td class="price">4400</td><td class="price">14400</td><td class="price">10400</td><td class="price">12000</td><td class="price">12000</td><td class="price">12000</td><td class="price">12000</td><td class="price">12000</td></tr>
+                    <tr><td class="row-header">9kW</td><td class="price">16800</td><td class="price">5200</td><td class="price">16800</td><td class="price">11600</td><td class="price">14000</td><td class="price">14000</td><td class="price">14000</td><td class="price">14000</td><td class="price">14000</td></tr>
+                    <tr><td class="row-header">10kW</td><td class="price">19200</td><td class="price">5600</td><td class="price">19200</td><td class="price">13200</td><td class="price">16000</td><td class="price">16000</td><td class="price">16000</td><td class="price">16000</td><td class="price">16000</td></tr>
+                    <tr><td class="row-header">11kW</td><td class="price">21600</td><td class="price">6400</td><td class="price">21600</td><td class="price">14400</td><td class="price">18000</td><td class="price">18000</td><td class="price">18000</td><td class="price">18000</td><td class="price">18000</td></tr>
+                    <tr><td class="row-header">12kW</td><td class="price">24000</td><td class="price">6800</td><td class="price">24000</td><td class="price">15600</td><td class="price">20000</td><td class="price">20000</td><td class="price">20000</td><td class="price">20000</td><td class="price">20000</td></tr>
+                    <tr><td class="row-header">13kW</td><td class="price">26400</td><td class="price">7600</td><td class="price">26400</td><td class="price">17200</td><td class="price">22000</td><td class="price">22000</td><td class="price">22000</td><td class="price">22000</td><td class="price">22000</td></tr>
+                    <tr><td class="row-header">14kW</td><td class="price">28800</td><td class="price">8000</td><td class="price">28800</td><td class="price">18400</td><td class="price">24000</td><td class="price">24000</td><td class="price">24000</td><td class="price">24000</td><td class="price">24000</td></tr>
+                    <tr><td class="row-header">15kW</td><td class="price">31200</td><td class="price">8800</td><td class="price">31200</td><td class="price">19600</td><td class="price">26000</td><td class="price">26000</td><td class="price">26000</td><td class="price">26000</td><td class="price">26000</td></tr>
+                    <tr><td class="row-header">16kW</td><td class="price">33600</td><td class="price">9600</td><td class="price">33600</td><td class="price">21200</td><td class="price">28000</td><td class="price">28000</td><td class="price">28000</td><td class="price">28000</td><td class="price">28000</td></tr>
+                    <tr><td class="row-header">17kW</td><td class="price">36000</td><td class="price">10400</td><td class="price">36000</td><td class="price">22400</td><td class="price">30000</td><td class="price">30000</td><td class="price">30000</td><td class="price">30000</td><td class="price">30000</td></tr>
+                    <tr><td class="row-header">18kW</td><td class="price">38400</td><td class="price">11200</td><td class="price">38400</td><td class="price">23600</td><td class="price">32000</td><td class="price">32000</td><td class="price">32000</td><td class="price">32000</td><td class="price">32000</td></tr>
+                    <tr><td class="row-header">19kW</td><td class="price">40800</td><td class="price">12000</td><td class="price">40800</td><td class="price">25200</td><td class="price">34000</td><td class="price">34000</td><td class="price">34000</td><td class="price">34000</td><td class="price">34000</td></tr>
+                    <tr><td class="row-header">20kW</td><td class="price">43200</td><td class="price">12800</td><td class="price">43200</td><td class="price">26400</td><td class="price">36000</td><td class="price">36000</td><td class="price">36000</td><td class="price">36000</td><td class="price">36000</td></tr>
+                    <tr><td class="row-header">21kW</td><td class="price">45600</td><td class="price">13600</td><td class="price">43200</td><td class="price">27600</td><td class="price">38000</td><td class="price">38000</td><td class="price">38000</td><td class="price">38000</td><td class="price">38000</td></tr>
+                    <tr><td class="row-header">22kW以上</td><td class="price">48000</td><td class="price">14400</td><td class="price">43200</td><td class="price">29200</td><td class="price">40000</td><td class="price">40000</td><td class="price">40000</td><td class="price">40000</td><td class="price">40000</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- USENPAY -->
+        <h2 class="section-title">USENPAY 手数料</h2>
+        <h3 class="subsection-title">手数料_USENPAY 中小企業料率</h3>
+        <div class="info-box">
+            <p>※ GMV（売上）と決済手数料率に応じた手数料表です。「獲得不可」と記載のセルは対象外となります。</p>
+        </div>
+        <div class="table-scroll">
+            <table class="fee-table gmv-table">
+                <thead>
+                    <tr>
+                        <th>GMV（売上）/月</th>
+                        <th>2.99%</th>
+                        <th>2.95%</th>
+                        <th>2.90%</th>
+                        <th>2.85%</th>
+                        <th>2.80%</th>
+                        <th>2.75%</th>
+                        <th>2.70%</th>
+                        <th>2.65%</th>
+                        <th>2.60%</th>
+                        <th>2.55%</th>
+                        <th>2.50%</th>
+                        <th>2.45%</th>
+                        <th>2.40%</th>
+                        <th>2.38%</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="row-header">¥290,000以下</td><td></td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥300,000〜</td><td></td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥400,000〜</td><td></td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥500,000〜</td><td></td><td class="available">¥14,000</td><td class="available">¥12,000</td><td class="available">¥10,000</td><td class="available">¥8,000</td><td class="available">¥6,000</td><td class="available">¥4,000</td><td class="available">¥2,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥600,000〜</td><td></td><td class="available">¥20,000</td><td class="available">¥18,000</td><td class="available">¥14,000</td><td class="available">¥12,000</td><td class="available">¥10,000</td><td class="available">¥8,000</td><td class="available">¥6,000</td><td class="available">¥2,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥700,000〜</td><td></td><td class="available">¥24,000</td><td class="available">¥22,000</td><td class="available">¥16,000</td><td class="available">¥16,000</td><td class="available">¥14,000</td><td class="available">¥12,000</td><td class="available">¥8,000</td><td class="available">¥6,000</td><td class="available">¥4,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥800,000〜</td><td></td><td class="available">¥32,000</td><td class="available">¥28,000</td><td class="available">¥20,000</td><td class="available">¥20,000</td><td class="available">¥20,000</td><td class="available">¥16,000</td><td class="available">¥12,000</td><td class="available">¥10,000</td><td class="available">¥6,000</td><td class="available">¥2,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥900,000〜</td><td></td><td class="available">¥36,000</td><td class="available">¥32,000</td><td class="available">¥28,000</td><td class="available">¥28,000</td><td class="available">¥24,000</td><td class="available">¥20,000</td><td class="available">¥16,000</td><td class="available">¥12,000</td><td class="available">¥8,000</td><td class="available">¥6,000</td><td class="available">¥2,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥1,000,000〜</td><td></td><td class="available">¥40,000</td><td class="available">¥40,000</td><td class="available">¥40,000</td><td class="available">¥32,000</td><td class="available">¥28,000</td><td class="available">¥24,000</td><td class="available">¥20,000</td><td class="available">¥16,000</td><td class="available">¥12,000</td><td class="available">¥8,000</td><td class="available">¥4,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥1,100,000〜</td><td></td><td class="available">¥48,000</td><td class="available">¥44,000</td><td class="available">¥40,000</td><td class="available">¥36,000</td><td class="available">¥32,000</td><td class="available">¥28,000</td><td class="available">¥24,000</td><td class="available">¥16,000</td><td class="available">¥14,000</td><td class="available">¥10,000</td><td class="available">¥6,000</td><td class="available">¥2,000</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥1,200,000〜</td><td></td><td class="available">¥56,000</td><td class="available">¥52,000</td><td class="available">¥44,000</td><td class="available">¥40,000</td><td class="available">¥36,000</td><td class="available">¥32,000</td><td class="available">¥24,000</td><td class="available">¥20,000</td><td class="available">¥16,000</td><td class="available">¥12,000</td><td class="available">¥8,000</td><td class="available">¥2,000</td><td class="available">¥2,000</td></tr>
+                    <tr><td class="row-header">¥1,300,000〜</td><td></td><td class="available">¥56,000</td><td class="available">¥56,000</td><td class="available">¥52,000</td><td class="available">¥44,000</td><td class="available">¥40,000</td><td class="available">¥36,000</td><td class="available">¥28,000</td><td class="available">¥24,000</td><td class="available">¥20,000</td><td class="available">¥14,000</td><td class="available">¥10,000</td><td class="available">¥4,000</td><td class="available">¥2,000</td></tr>
+                    <tr><td class="row-header">¥1,400,000〜</td><td></td><td class="available">¥64,000</td><td class="available">¥60,000</td><td class="available">¥56,000</td><td class="available">¥52,000</td><td class="available">¥44,000</td><td class="available">¥40,000</td><td class="available">¥32,000</td><td class="available">¥28,000</td><td class="available">¥20,000</td><td class="available">¥16,000</td><td class="available">¥12,000</td><td class="available">¥6,000</td><td class="available">¥4,000</td></tr>
+                    <tr><td class="row-header">¥1,500,000〜</td><td></td><td class="available">¥72,000</td><td class="available">¥68,000</td><td class="available">¥60,000</td><td class="available">¥56,000</td><td class="available">¥48,000</td><td class="available">¥44,000</td><td class="available">¥36,000</td><td class="available">¥32,000</td><td class="available">¥24,000</td><td class="available">¥20,000</td><td class="available">¥14,000</td><td class="available">¥8,000</td><td class="available">¥6,000</td></tr>
+                    <tr><td class="row-header">¥1,600,000〜</td><td></td><td class="available">¥80,000</td><td class="available">¥72,000</td><td class="available">¥68,000</td><td class="available">¥60,000</td><td class="available">¥52,000</td><td class="available">¥48,000</td><td class="available">¥40,000</td><td class="available">¥32,000</td><td class="available">¥28,000</td><td class="available">¥20,000</td><td class="available">¥16,000</td><td class="available">¥10,000</td><td class="available">¥6,000</td></tr>
+                    <tr><td class="row-header">¥1,700,000〜</td><td></td><td class="available">¥80,000</td><td class="available">¥80,000</td><td class="available">¥72,000</td><td class="available">¥64,000</td><td class="available">¥60,000</td><td class="available">¥52,000</td><td class="available">¥44,000</td><td class="available">¥36,000</td><td class="available">¥32,000</td><td class="available">¥24,000</td><td class="available">¥18,000</td><td class="available">¥10,000</td><td class="available">¥8,000</td></tr>
+                    <tr><td class="row-header">¥1,800,000〜</td><td></td><td class="available">¥88,000</td><td class="available">¥84,000</td><td class="available">¥76,000</td><td class="available">¥68,000</td><td class="available">¥64,000</td><td class="available">¥56,000</td><td class="available">¥48,000</td><td class="available">¥40,000</td><td class="available">¥32,000</td><td class="available">¥24,000</td><td class="available">¥20,000</td><td class="available">¥12,000</td><td class="available">¥10,000</td></tr>
+                    <tr><td class="row-header">¥1,900,000〜</td><td></td><td class="available">¥96,000</td><td class="available">¥92,000</td><td class="available">¥84,000</td><td class="available">¥76,000</td><td class="available">¥68,000</td><td class="available">¥60,000</td><td class="available">¥52,000</td><td class="available">¥44,000</td><td class="available">¥36,000</td><td class="available">¥28,000</td><td class="available">¥20,000</td><td class="available">¥14,000</td><td class="available">¥12,000</td></tr>
+                    <tr><td class="row-header">¥2,000,000〜</td><td></td><td class="available">¥104,000</td><td class="available">¥96,000</td><td class="available">¥88,000</td><td class="available">¥80,000</td><td class="available">¥72,000</td><td class="available">¥64,000</td><td class="available">¥56,000</td><td class="available">¥48,000</td><td class="available">¥40,000</td><td class="available">¥32,000</td><td class="available">¥24,000</td><td class="available">¥16,000</td><td class="available">¥12,000</td></tr>
+                    <tr><td class="row-header">¥2,100,000〜</td><td></td><td class="available">¥104,000</td><td class="available">¥100,000</td><td class="available">¥92,000</td><td class="available">¥84,000</td><td class="available">¥76,000</td><td class="available">¥64,000</td><td class="available">¥60,000</td><td class="available">¥52,000</td><td class="available">¥40,000</td><td class="available">¥32,000</td><td class="available">¥24,000</td><td class="available">¥18,000</td><td class="available">¥14,000</td></tr>
+                    <tr><td class="row-header">¥2,200,000〜</td><td></td><td class="available">¥112,000</td><td class="available">¥108,000</td><td class="available">¥100,000</td><td class="available">¥88,000</td><td class="available">¥80,000</td><td class="available">¥72,000</td><td class="available">¥64,000</td><td class="available">¥52,000</td><td class="available">¥44,000</td><td class="available">¥36,000</td><td class="available">¥28,000</td><td class="available">¥20,000</td><td class="available">¥16,000</td></tr>
+                    <tr><td class="row-header">¥2,300,000〜</td><td></td><td class="available">¥120,000</td><td class="available">¥112,000</td><td class="available">¥104,000</td><td class="available">¥92,000</td><td class="available">¥84,000</td><td class="available">¥72,000</td><td class="available">¥64,000</td><td class="available">¥56,000</td><td class="available">¥48,000</td><td class="available">¥36,000</td><td class="available">¥28,000</td><td class="available">¥20,000</td><td class="available">¥16,000</td></tr>
+                    <tr><td class="row-header">¥2,400,000〜</td><td></td><td class="available">¥128,000</td><td class="available">¥116,000</td><td class="available">¥108,000</td><td class="available">¥100,000</td><td class="available">¥88,000</td><td class="available">¥80,000</td><td class="available">¥68,000</td><td class="available">¥60,000</td><td class="available">¥52,000</td><td class="available">¥40,000</td><td class="available">¥32,000</td><td class="available">¥22,000</td><td class="available">¥18,000</td></tr>
+                    <tr><td class="row-header">¥2,500,000〜</td><td class="available">¥36,000</td><td class="available">¥32,000</td><td class="available">¥24,000</td><td class="available">¥20,000</td><td class="available">¥12,000</td><td class="available">¥6,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td class="row-header">¥3,000,000〜</td><td class="available">¥48,000</td><td class="available">¥40,000</td><td class="available">¥32,000</td><td class="available">¥24,000</td><td class="available">¥20,000</td><td class="available">¥12,000</td><td class="available">¥2,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td class="row-header">¥3,500,000〜</td><td class="available">¥60,000</td><td class="available">¥52,000</td><td class="available">¥40,000</td><td class="available">¥32,000</td><td class="available">¥24,000</td><td class="available">¥16,000</td><td class="available">¥6,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td class="row-header">¥4,000,000〜</td><td class="available">¥68,000</td><td class="available">¥60,000</td><td class="available">¥52,000</td><td class="available">¥40,000</td><td class="available">¥32,000</td><td class="available">¥20,000</td><td class="available">¥10,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td class="row-header">¥5,000,000〜</td><td class="available">¥92,000</td><td class="available">¥80,000</td><td class="available">¥68,000</td><td class="available">¥52,000</td><td class="available">¥40,000</td><td class="available">¥24,000</td><td class="available">¥16,000</td><td class="available">¥2,000</td><td class="unavailable">獲得不可</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td class="row-header">¥6,000,000〜</td><td class="available">¥112,000</td><td class="available">¥100,000</td><td class="available">¥80,000</td><td class="available">¥68,000</td><td class="available">¥52,000</td><td class="available">¥32,000</td><td class="available">¥20,000</td><td class="available">¥6,000</td><td class="unavailable">獲得不可</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td class="row-header">¥7,000,000〜</td><td class="available">¥132,000</td><td class="available">¥120,000</td><td class="available">¥100,000</td><td class="available">¥80,000</td><td class="available">¥60,000</td><td class="available">¥40,000</td><td class="available">¥24,000</td><td class="available">¥10,000</td><td class="unavailable">獲得不可</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td class="row-header">¥8,000,000〜</td><td class="available">¥160,000</td><td class="available">¥140,000</td><td class="available">¥120,000</td><td class="available">¥100,000</td><td class="available">¥68,000</td><td class="available">¥52,000</td><td class="available">¥32,000</td><td class="available">¥12,000</td><td class="unavailable">獲得不可</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td class="row-header">¥9,000,000〜</td><td class="available">¥160,000</td><td class="available">¥160,000</td><td class="available">¥140,000</td><td class="available">¥100,000</td><td class="available">¥68,000</td><td class="available">¥60,000</td><td class="available">¥40,000</td><td class="available">¥16,000</td><td class="unavailable">獲得不可</td><td></td><td></td><td></td><td></td><td></td></tr>
+                    <tr><td class="row-header">¥10,000,000〜</td><td class="available">¥200,000</td><td class="available">¥180,000</td><td class="available">¥152,000</td><td class="available">¥120,000</td><td class="available">¥100,000</td><td class="available">¥68,000</td><td class="available">¥44,000</td><td class="available">¥20,000</td><td class="unavailable">獲得不可</td><td></td><td></td><td></td><td></td><td></td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- USENPAY 通常料率 -->
+        <h3 class="subsection-title">手数料_USENPAY 通常料率</h3>
+        <div class="table-scroll">
+            <table class="fee-table gmv-table">
+                <thead>
+                    <tr>
+                        <th>GMV（売上）/月</th>
+                        <th>2.99%</th>
+                        <th>2.95%</th>
+                        <th>2.90%</th>
+                        <th>2.85%</th>
+                        <th>2.80%</th>
+                        <th>2.75%</th>
+                        <th>2.70%</th>
+                        <th>2.65%</th>
+                        <th>2.60%</th>
+                        <th>2.55%</th>
+                        <th>2.50%</th>
+                        <th>2.45%</th>
+                        <th>2.40%</th>
+                        <th>2.38%</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="row-header">¥290,000以下</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥300,000〜</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥400,000〜</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥500,000〜</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥600,000〜</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥700,000〜</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥800,000〜</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥900,000〜</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥1,000,000〜</td><td class="available">¥6,000</td><td class="available">¥4,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥1,100,000〜</td><td class="available">¥8,000</td><td class="available">¥6,000</td><td class="available">¥2,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥1,200,000〜</td><td class="available">¥10,000</td><td class="available">¥8,000</td><td class="available">¥4,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥1,300,000〜</td><td class="available">¥12,000</td><td class="available">¥10,000</td><td class="available">¥6,000</td><td class="available">¥2,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥1,400,000〜</td><td class="available">¥14,000</td><td class="available">¥12,000</td><td class="available">¥8,000</td><td class="available">¥4,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥1,500,000〜</td><td class="available">¥16,000</td><td class="available">¥14,000</td><td class="available">¥10,000</td><td class="available">¥6,000</td><td class="available">¥2,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥1,600,000〜</td><td class="available">¥18,000</td><td class="available">¥16,000</td><td class="available">¥10,000</td><td class="available">¥6,000</td><td class="available">¥2,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥1,700,000〜</td><td class="available">¥20,000</td><td class="available">¥18,000</td><td class="available">¥12,000</td><td class="available">¥8,000</td><td class="available">¥4,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥1,800,000〜</td><td class="available">¥22,000</td><td class="available">¥22,000</td><td class="available">¥14,000</td><td class="available">¥10,000</td><td class="available">¥4,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥1,900,000〜</td><td class="available">¥24,000</td><td class="available">¥22,000</td><td class="available">¥16,000</td><td class="available">¥10,000</td><td class="available">¥6,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥2,000,000〜</td><td class="available">¥26,000</td><td class="available">¥24,000</td><td class="available">¥18,000</td><td class="available">¥12,000</td><td class="available">¥8,000</td><td class="available">¥2,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥2,100,000〜</td><td class="available">¥28,000</td><td class="available">¥26,000</td><td class="available">¥20,000</td><td class="available">¥14,000</td><td class="available">¥8,000</td><td class="available">¥2,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥2,200,000〜</td><td class="available">¥30,000</td><td class="available">¥28,000</td><td class="available">¥22,000</td><td class="available">¥16,000</td><td class="available">¥10,000</td><td class="available">¥4,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥2,300,000〜</td><td class="available">¥32,000</td><td class="available">¥30,000</td><td class="available">¥22,000</td><td class="available">¥16,000</td><td class="available">¥10,000</td><td class="available">¥4,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥2,400,000〜</td><td class="available">¥34,000</td><td class="available">¥32,000</td><td class="available">¥22,000</td><td class="available">¥18,000</td><td class="available">¥12,000</td><td class="available">¥6,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥2,500,000〜</td><td class="available">¥36,000</td><td class="available">¥32,000</td><td class="available">¥24,000</td><td class="available">¥20,000</td><td class="available">¥12,000</td><td class="available">¥6,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥3,000,000〜</td><td class="available">¥48,000</td><td class="available">¥40,000</td><td class="available">¥32,000</td><td class="available">¥24,000</td><td class="available">¥20,000</td><td class="available">¥12,000</td><td class="available">¥2,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥3,500,000〜</td><td class="available">¥60,000</td><td class="available">¥52,000</td><td class="available">¥40,000</td><td class="available">¥32,000</td><td class="available">¥24,000</td><td class="available">¥16,000</td><td class="available">¥6,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥4,000,000〜</td><td class="available">¥68,000</td><td class="available">¥60,000</td><td class="available">¥52,000</td><td class="available">¥40,000</td><td class="available">¥32,000</td><td class="available">¥20,000</td><td class="available">¥10,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥5,000,000〜</td><td class="available">¥92,000</td><td class="available">¥80,000</td><td class="available">¥68,000</td><td class="available">¥52,000</td><td class="available">¥40,000</td><td class="available">¥24,000</td><td class="available">¥16,000</td><td class="available">¥2,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥6,000,000〜</td><td class="available">¥112,000</td><td class="available">¥100,000</td><td class="available">¥80,000</td><td class="available">¥68,000</td><td class="available">¥52,000</td><td class="available">¥32,000</td><td class="available">¥20,000</td><td class="available">¥6,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥7,000,000〜</td><td class="available">¥132,000</td><td class="available">¥120,000</td><td class="available">¥100,000</td><td class="available">¥80,000</td><td class="available">¥60,000</td><td class="available">¥40,000</td><td class="available">¥24,000</td><td class="available">¥10,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥8,000,000〜</td><td class="available">¥160,000</td><td class="available">¥140,000</td><td class="available">¥120,000</td><td class="available">¥100,000</td><td class="available">¥68,000</td><td class="available">¥52,000</td><td class="available">¥32,000</td><td class="available">¥12,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥9,000,000〜</td><td class="available">¥180,000</td><td class="available">¥160,000</td><td class="available">¥140,000</td><td class="available">¥100,000</td><td class="available">¥80,000</td><td class="available">¥60,000</td><td class="available">¥40,000</td><td class="available">¥16,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                    <tr><td class="row-header">¥10,000,000〜</td><td class="available">¥200,000</td><td class="available">¥180,000</td><td class="available">¥152,000</td><td class="available">¥120,000</td><td class="available">¥100,000</td><td class="available">¥68,000</td><td class="available">¥44,000</td><td class="available">¥20,000</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td><td class="unavailable">獲得不可</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div style="margin-top: 30px; text-align: center;">
+            <button id="pdf-export-btn" style="background: #003399; color: white; border: none; padding: 12px 30px; font-size: 16px; border-radius: 5px; cursor: pointer;">このページをPDF出力</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="pdf-export.js"></script>
+    <script>
+        document.getElementById('pdf-export-btn').addEventListener('click', function() {
+            exportPageToPDF('USEN商材4種');
+        });
+
+        // 割引適用ボタン
+        document.getElementById('apply-discount-btn').addEventListener('click', function() {
+            const discount = parseInt(document.getElementById('page-discount-rate').value) || 0;
+            if (discount > 0) {
+                applyDiscountToPage(discount);
+                document.getElementById('discount-note').style.display = 'inline';
+                document.getElementById('discount-note').textContent = '※' + discount + '%割引適用中';
+                this.disabled = true;
+                this.textContent = '適用済み';
+            }
+        });
+    </script>
+</body>
+</html>

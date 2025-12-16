@@ -1,0 +1,1129 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>NTT西日本（フレッツ光） 手数料表</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .service-page {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #4a90d9;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .service-title {
+            font-size: 24px;
+            color: #0066cc;
+            margin-bottom: 10px;
+        }
+        .tax-note {
+            text-align: right;
+            color: #c62828;
+            font-weight: bold;
+            margin-bottom: 20px;
+        }
+        .fee-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            font-size: 11px;
+        }
+        .fee-table th {
+            background: #4a7c59;
+            color: white;
+            padding: 8px 6px;
+            text-align: center;
+            border: 1px solid #3d6b4a;
+            font-weight: bold;
+        }
+        .fee-table td {
+            padding: 6px 8px;
+            border: 1px solid #ccc;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .fee-table .left-align {
+            text-align: left;
+        }
+        .fee-table .category-cell {
+            background: #e8f5e9;
+            font-weight: bold;
+            padding: 10px 8px;
+            white-space: nowrap;
+            text-align: center;
+            min-width: 80px;
+        }
+        .fee-table .subcategory-cell {
+            background: #f1f8e9;
+            font-weight: bold;
+            text-align: center;
+            font-size: 10px;
+        }
+        /* 行の色分け */
+        .row-yellow { background: #fff9c4 !important; }
+        .row-orange { background: #ffe0b2 !important; }
+        .row-pink { background: #f8bbd0 !important; }
+        .row-purple { background: #e1bee7 !important; }
+        .row-cyan { background: #b2ebf2 !important; }
+        .row-green { background: #c8e6c9 !important; }
+        .row-lime { background: #dcedc8 !important; }
+        .row-blue { background: #bbdefb !important; }
+        .row-gray { background: #f5f5f5 !important; }
+
+        .price {
+            color: #c62828;
+            font-weight: bold;
+        }
+        .price-orange {
+            color: #e65100;
+            font-weight: bold;
+        }
+        .note-box {
+            background: #fff8e1;
+            border: 1px solid #ffc107;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 13px;
+        }
+        .note-box-blue {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 13px;
+        }
+        .note-box-red {
+            background: #ffebee;
+            border: 1px solid #f44336;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+            font-size: 13px;
+        }
+        .section-divider {
+            border-top: 3px solid #0066cc;
+            margin: 40px 0 20px;
+            padding-top: 20px;
+        }
+        .subsection-title {
+            font-size: 16px;
+            color: #0066cc;
+            margin: 25px 0 15px;
+            padding: 8px 12px;
+            background: #e3f2fd;
+            border-left: 4px solid #0066cc;
+        }
+        .scroll-table {
+            overflow-x: auto;
+        }
+        .highlight-text {
+            color: #c62828;
+            font-weight: bold;
+        }
+        .small-table {
+            font-size: 11px;
+        }
+        .small-table th, .small-table td {
+            padding: 6px 10px;
+        }
+        /* 割引コントロール */
+        .discount-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 5px;
+        }
+        .discount-controls label {
+            font-weight: bold;
+        }
+        .discount-controls select {
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .discount-controls button {
+            padding: 8px 20px;
+            font-size: 14px;
+            background: #4a90d9;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .discount-controls button:hover {
+            background: #357abd;
+        }
+        .discount-note {
+            color: #c62828;
+            font-weight: bold;
+            margin-left: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="service-page">
+        <a href="../index.html" class="back-link">← 一覧に戻る</a>
+
+        <!-- 割引コントロール（PDF出力時は非表示） -->
+        <div class="discount-controls" id="discount-controls">
+            <label for="page-discount-rate">%変更：</label>
+            <select id="page-discount-rate">
+                <option value="0">なし</option>
+                <option value="20">20%</option>
+                <option value="25">25%</option>
+                <option value="30">30%</option>
+                <option value="35">35%</option>
+                <option value="40">40%</option>
+                <option value="45">45%</option>
+                <option value="50">50%</option>
+                <option value="55">55%</option>
+                <option value="60">60%</option>
+                <option value="65">65%</option>
+                <option value="70">70%</option>
+                <option value="75">75%</option>
+            </select>
+            <button id="apply-discount-btn">割引適用</button>
+            <span class="discount-note" id="discount-note" style="display: none;">※割引適用中</span>
+        </div>
+
+        <h1 class="service-title">【2026年1月〜】NTT西日本（フレッツ光）：手数料条件 / 留意事項 / 支払サイト</h1>
+        <p class="tax-note">−全て税別</p>
+
+        <div class="scroll-table">
+            <table class="fee-table">
+                <thead>
+                    <tr>
+                        <th>商材</th>
+                        <th>区分</th>
+                        <th>商品名</th>
+                        <th>マス案件</th>
+                        <th>SOHO案件</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <!-- 回線基本条件 -->
+                    <tr class="row-yellow">
+                        <td class="category-cell">回線基本条件</td>
+                        <td class="subcategory-cell"></td>
+                        <td class="left-align">◆光ネクスト_オフィス（マンションタイプ）</td>
+                        <td class="price">10,000円</td>
+                        <td class="price">10,000円</td>
+                    </tr>
+                    <tr class="row-yellow">
+                        <td class="category-cell">回線基本条件</td>
+                        <td class="subcategory-cell"></td>
+                        <td class="left-align">◆光ネクスト_オフィス（ファミリータイプ）</td>
+                        <td class="price">10,000円</td>
+                        <td class="price">10,000円</td>
+                    </tr>
+                    <tr class="row-yellow">
+                        <td class="category-cell">回線基本条件</td>
+                        <td class="subcategory-cell"></td>
+                        <td class="left-align">◆光ネクスト（マンションタイプ）</td>
+                        <td class="price">3,000円</td>
+                        <td class="price">3,000円</td>
+                    </tr>
+                    <tr class="row-yellow">
+                        <td class="category-cell">回線基本条件</td>
+                        <td class="subcategory-cell"></td>
+                        <td class="left-align">◆光ネクスト（ファミリータイプ）</td>
+                        <td class="price">5,000円</td>
+                        <td class="price">5,000円</td>
+                    </tr>
+                    <tr class="row-yellow">
+                        <td class="category-cell">回線基本条件</td>
+                        <td class="subcategory-cell"></td>
+                        <td class="left-align">◆ひかり電話ネクスト</td>
+                        <td class="price">5,000円</td>
+                        <td class="price">5,000円</td>
+                    </tr>
+                    <tr class="row-yellow">
+                        <td class="category-cell">回線基本条件</td>
+                        <td class="subcategory-cell"></td>
+                        <td class="left-align">◆光クロス（マンションタイプ／ファミリータイプ）※光クロスBiz含む</td>
+                        <td class="price">8,000円</td>
+                        <td class="price">8,000円</td>
+                    </tr>
+                    <tr class="row-yellow">
+                        <td class="category-cell">回線基本条件</td>
+                        <td class="subcategory-cell"></td>
+                        <td class="left-align">◆光クロス_オフィス（マンションタイプ／ファミリータイプ）</td>
+                        <td class="price">13,000円</td>
+                        <td class="price">13,000円</td>
+                    </tr>
+
+                    <!-- 本社施策 SOHO一時金インセ -->
+                    <tr class="row-orange">
+                        <td class="category-cell">本社施策</td>
+                        <td class="subcategory-cell">SOHO一時金インセ</td>
+                        <td class="left-align">◆SOHO＿一時金インセ：光ネクスト_オフィス（マンションタイプ）</td>
+                        <td>-</td>
+                        <td class="price">27,000円</td>
+                    </tr>
+                    <tr class="row-orange">
+                        <td class="category-cell">本社施策</td>
+                        <td class="subcategory-cell">SOHO一時金インセ</td>
+                        <td class="left-align">◆SOHO＿一時金インセ：光ネクスト_オフィス（ファミリータイプ）</td>
+                        <td>-</td>
+                        <td class="price">32,000円</td>
+                    </tr>
+                    <tr class="row-orange">
+                        <td class="category-cell">本社施策</td>
+                        <td class="subcategory-cell">SOHO一時金インセ</td>
+                        <td class="left-align">◆SOHO＿一時金インセ：光ネクスト（マンションタイプ）</td>
+                        <td>-</td>
+                        <td class="price">25,000円</td>
+                    </tr>
+                    <tr class="row-orange">
+                        <td class="category-cell">本社施策</td>
+                        <td class="subcategory-cell">SOHO一時金インセ</td>
+                        <td class="left-align">◆SOHO＿一時金インセ：光ネクスト（ファミリータイプ）</td>
+                        <td>-</td>
+                        <td class="price">30,000円</td>
+                    </tr>
+                    <tr class="row-orange">
+                        <td class="category-cell">本社施策</td>
+                        <td class="subcategory-cell">SOHO一時金インセ</td>
+                        <td class="left-align">◆SOHO＿一時金インセ：ひかり電話ネクスト</td>
+                        <td>-</td>
+                        <td class="price">3,000円</td>
+                    </tr>
+                    <tr class="row-orange">
+                        <td class="category-cell">本社施策</td>
+                        <td class="subcategory-cell">SOHO一時金インセ</td>
+                        <td class="left-align">◆SOHO＿一時金インセ：光クロス（マンションタイプ／ファミリータイプ）</td>
+                        <td>-</td>
+                        <td class="price">30,000円</td>
+                    </tr>
+                    <tr class="row-orange">
+                        <td class="category-cell">本社施策</td>
+                        <td class="subcategory-cell">SOHO一時金インセ</td>
+                        <td class="left-align">◆SOHO＿一時金インセ：光クロス_オフィス（マンションタイプ／ファミリータイプ）</td>
+                        <td>-</td>
+                        <td class="price">32,000円</td>
+                    </tr>
+
+                    <!-- 本社施策 SOHO継続利用インセ -->
+                    <tr class="row-pink">
+                        <td class="category-cell">本社施策</td>
+                        <td class="subcategory-cell">SOHO継続利用インセ</td>
+                        <td class="left-align">◆SOHO＿継続利用インセ：光ネクスト_オフィス（マンションタイプ）</td>
+                        <td>-</td>
+                        <td class="price">15,000円</td>
+                    </tr>
+                    <tr class="row-pink">
+                        <td class="category-cell">本社施策</td>
+                        <td class="subcategory-cell">SOHO継続利用インセ</td>
+                        <td class="left-align">◆SOHO＿継続利用インセ：光ネクスト_オフィス（ファミリータイプ）</td>
+                        <td>-</td>
+                        <td class="price">15,000円</td>
+                    </tr>
+                    <tr class="row-pink">
+                        <td class="category-cell">本社施策</td>
+                        <td class="subcategory-cell">SOHO継続利用インセ</td>
+                        <td class="left-align">◆SOHO＿継続利用インセ：光ネクスト（マンションタイプ）</td>
+                        <td>-</td>
+                        <td class="price">15,000円</td>
+                    </tr>
+                    <tr class="row-pink">
+                        <td class="category-cell">本社施策</td>
+                        <td class="subcategory-cell">SOHO継続利用インセ</td>
+                        <td class="left-align">◆SOHO＿継続利用インセ：光ネクスト（ファミリータイプ）</td>
+                        <td>-</td>
+                        <td class="price">15,000円</td>
+                    </tr>
+                    <tr class="row-pink">
+                        <td class="category-cell">本社施策</td>
+                        <td class="subcategory-cell">SOHO継続利用インセ</td>
+                        <td class="left-align">◆SOHO＿継続利用インセ：ひかり電話ネクスト</td>
+                        <td>-</td>
+                        <td class="price">15,000円</td>
+                    </tr>
+                    <tr class="row-pink">
+                        <td class="category-cell">本社施策</td>
+                        <td class="subcategory-cell">SOHO継続利用インセ</td>
+                        <td class="left-align">◆SOHO＿継続利用インセ：光クロス（マンションタイプ／ファミリータイプ）</td>
+                        <td>-</td>
+                        <td class="price">15,000円</td>
+                    </tr>
+                    <tr class="row-pink">
+                        <td class="category-cell">本社施策</td>
+                        <td class="subcategory-cell">SOHO継続利用インセ</td>
+                        <td class="left-align">◆SOHO＿継続利用インセ：光クロス_オフィス（マンションタイプ／ファミリータイプ）</td>
+                        <td>-</td>
+                        <td class="price">15,000円</td>
+                    </tr>
+
+                    <!-- 本社施策 SOHO条件付きインセ -->
+                    <tr class="row-purple">
+                        <td class="category-cell">本社施策</td>
+                        <td class="subcategory-cell">SOHO条件付きインセ</td>
+                        <td class="left-align">◆SOHO＿条件付きインセ：光ネクスト_オフィス（マンションタイプ）</td>
+                        <td>-</td>
+                        <td class="price-orange">N＋6継続時：3,000円／N＋12継続時：6,000円</td>
+                    </tr>
+                    <tr class="row-purple">
+                        <td class="category-cell">本社施策</td>
+                        <td class="subcategory-cell">SOHO条件付きインセ</td>
+                        <td class="left-align">◆SOHO＿条件付きインセ：光ネクスト_オフィス（ファミリータイプ）</td>
+                        <td>-</td>
+                        <td class="price-orange">N＋6継続時：3,000円／N＋12継続時：6,000円</td>
+                    </tr>
+                    <tr class="row-purple">
+                        <td class="category-cell">本社施策</td>
+                        <td class="subcategory-cell">SOHO条件付きインセ</td>
+                        <td class="left-align">◆SOHO＿条件付きインセ：光ネクスト（マンションタイプ）</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    <tr class="row-purple">
+                        <td class="category-cell">本社施策</td>
+                        <td class="subcategory-cell">SOHO条件付きインセ</td>
+                        <td class="left-align">◆SOHO＿条件付きインセ：光ネクスト（ファミリータイプ）</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    <tr class="row-purple">
+                        <td class="category-cell">本社施策</td>
+                        <td class="subcategory-cell">SOHO条件付きインセ</td>
+                        <td class="left-align">◆SOHO＿条件付きインセ：ひかり電話ネクスト</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    <tr class="row-purple">
+                        <td class="category-cell">本社施策</td>
+                        <td class="subcategory-cell">SOHO条件付きインセ</td>
+                        <td class="left-align">◆SOHO＿条件付きインセ：光クロス（マンションタイプ／ファミリータイプ）</td>
+                        <td>-</td>
+                        <td class="price-orange">N＋6継続時：3,000円／N＋12継続時：6,000円</td>
+                    </tr>
+                    <tr class="row-purple">
+                        <td class="category-cell">本社施策</td>
+                        <td class="subcategory-cell">SOHO条件付きインセ</td>
+                        <td class="left-align">◆SOHO＿条件付きインセ：光クロス_オフィス（マンションタイプ／ファミリータイプ）</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+
+                    <!-- 特別支援金 -->
+                    <tr class="row-gray">
+                        <td class="category-cell">特別支援金</td>
+                        <td class="subcategory-cell"></td>
+                        <td class="left-align">◆光ネクスト_オフィス（マンションタイプ）</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    <tr class="row-gray">
+                        <td class="category-cell">特別支援金</td>
+                        <td class="subcategory-cell"></td>
+                        <td class="left-align">◆光ネクスト_オフィス（ファミリータイプ）</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    <tr class="row-gray">
+                        <td class="category-cell">特別支援金</td>
+                        <td class="subcategory-cell"></td>
+                        <td class="left-align">◆光ネクスト（マンションタイプ）</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    <tr class="row-gray">
+                        <td class="category-cell">特別支援金</td>
+                        <td class="subcategory-cell"></td>
+                        <td class="left-align">◆光ネクスト（ファミリータイプ）</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    <tr class="row-gray">
+                        <td class="category-cell">特別支援金</td>
+                        <td class="subcategory-cell"></td>
+                        <td class="left-align">◆ひかり電話ネクスト</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    <tr class="row-gray">
+                        <td class="category-cell">特別支援金</td>
+                        <td class="subcategory-cell"></td>
+                        <td class="left-align">◆光クロス（マンションタイプ／ファミリータイプ）</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    <tr class="row-gray">
+                        <td class="category-cell">特別支援金</td>
+                        <td class="subcategory-cell"></td>
+                        <td class="left-align">◆光クロス_オフィス（マンションタイプ／ファミリータイプ）</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+
+                    <!-- 継続手数料 -->
+                    <tr class="row-green">
+                        <td class="category-cell">継続手数料</td>
+                        <td class="subcategory-cell"></td>
+                        <td class="left-align">◆光ネクスト_オフィス（マンションタイプ）</td>
+                        <td>-</td>
+                        <td class="price">0円</td>
+                    </tr>
+                    <tr class="row-green">
+                        <td class="category-cell">継続手数料</td>
+                        <td class="subcategory-cell"></td>
+                        <td class="left-align">◆光ネクスト_オフィス（ファミリータイプ）</td>
+                        <td>-</td>
+                        <td class="price">0円</td>
+                    </tr>
+                    <tr class="row-green">
+                        <td class="category-cell">継続手数料</td>
+                        <td class="subcategory-cell"></td>
+                        <td class="left-align">◆光ネクスト（マンションタイプ）</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    <tr class="row-green">
+                        <td class="category-cell">継続手数料</td>
+                        <td class="subcategory-cell"></td>
+                        <td class="left-align">◆光ネクスト（ファミリータイプ）</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    <tr class="row-green">
+                        <td class="category-cell">継続手数料</td>
+                        <td class="subcategory-cell"></td>
+                        <td class="left-align">◆ひかり電話ネクスト</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    <tr class="row-green">
+                        <td class="category-cell">継続手数料</td>
+                        <td class="subcategory-cell"></td>
+                        <td class="left-align">◆光クロス（マンションタイプ／ファミリータイプ）</td>
+                        <td>-</td>
+                        <td>-</td>
+                    </tr>
+                    <tr class="row-green">
+                        <td class="category-cell">継続手数料</td>
+                        <td class="subcategory-cell"></td>
+                        <td class="left-align">◆光クロス_オフィス（マンションタイプ／ファミリータイプ）</td>
+                        <td>-</td>
+                        <td class="price">500円／継続　※(N+1〜12か月)</td>
+                    </tr>
+
+                    <!-- オプション基本条件 -->
+                    <tr class="row-cyan">
+                        <td class="category-cell">オプション基本条件</td>
+                        <td class="subcategory-cell"></td>
+                        <td class="left-align">◆西ひかり電話エース（※ひかり電話ネクストエースは対象外）</td>
+                        <td>-</td>
+                        <td class="price">6,000円</td>
+                    </tr>
+                    <tr class="row-cyan">
+                        <td class="category-cell">オプション基本条件</td>
+                        <td class="subcategory-cell"></td>
+                        <td class="left-align">◆西ひかり電話オフィス・オフィスエース</td>
+                        <td>-</td>
+                        <td class="price">2,400円／CH</td>
+                    </tr>
+                    <tr class="row-cyan">
+                        <td class="category-cell">オプション基本条件</td>
+                        <td class="subcategory-cell"></td>
+                        <td class="left-align">◆西セキュリティ機能　見張り番</td>
+                        <td>-</td>
+                        <td class="price">400円</td>
+                    </tr>
+                    <tr class="row-lime">
+                        <td class="category-cell">オプション基本条件</td>
+                        <td class="subcategory-cell">情シスおまかせコンシェルジュ</td>
+                        <td class="left-align">◆基本手数料</td>
+                        <td>-</td>
+                        <td class="price">3,200円</td>
+                    </tr>
+                    <tr class="row-lime">
+                        <td class="category-cell">オプション基本条件</td>
+                        <td class="subcategory-cell">情シスおまかせコンシェルジュ</td>
+                        <td class="left-align">◆継続手数料(N＋6か月)</td>
+                        <td>-</td>
+                        <td class="price">1,500円</td>
+                    </tr>
+                    <tr class="row-orange">
+                        <td class="category-cell">オプション基本条件</td>
+                        <td class="subcategory-cell">オフィスプライムサポート</td>
+                        <td class="left-align">◆一時金インセンティブ</td>
+                        <td>-</td>
+                        <td class="price">3,750円</td>
+                    </tr>
+                    <tr class="row-orange">
+                        <td class="category-cell">オプション基本条件</td>
+                        <td class="subcategory-cell">オフィスプライムサポート</td>
+                        <td class="left-align">◆フレッツセット販売インセンティブ</td>
+                        <td>-</td>
+                        <td class="price">15,000円</td>
+                    </tr>
+                    <tr class="row-orange">
+                        <td class="category-cell">オプション基本条件</td>
+                        <td class="subcategory-cell">オフィスプライムサポート</td>
+                        <td class="left-align">◆継続手数料(N＋1〜3か月)</td>
+                        <td>-</td>
+                        <td class="price">1,000円／継続</td>
+                    </tr>
+                    <tr class="row-orange">
+                        <td class="category-cell">オプション基本条件</td>
+                        <td class="subcategory-cell">オフィスプライムサポート</td>
+                        <td class="left-align">◆継続手数料(N＋4〜6か月)</td>
+                        <td>-</td>
+                        <td class="price">2,000円／継続</td>
+                    </tr>
+                    <tr class="row-orange">
+                        <td class="category-cell">オプション基本条件</td>
+                        <td class="subcategory-cell">オフィスプライムサポート</td>
+                        <td class="left-align">◆継続手数料(N＋7〜9か月)</td>
+                        <td>-</td>
+                        <td class="price">3,000円／継続</td>
+                    </tr>
+                    <tr class="row-orange">
+                        <td class="category-cell">オプション基本条件</td>
+                        <td class="subcategory-cell">オフィスプライムサポート</td>
+                        <td class="left-align">◆継続手数料(N＋10〜11か月)</td>
+                        <td>-</td>
+                        <td class="price">4,500円／継続</td>
+                    </tr>
+                    <tr class="row-orange">
+                        <td class="category-cell">オプション基本条件</td>
+                        <td class="subcategory-cell">オフィスプライムサポート</td>
+                        <td class="left-align">◆継続手数料(N＋12か月)</td>
+                        <td>-</td>
+                        <td class="price">5,500円／継続</td>
+                    </tr>
+                    <tr class="row-blue">
+                        <td class="category-cell">オプション基本条件</td>
+                        <td class="subcategory-cell">24時間出張修理オプション</td>
+                        <td class="left-align">◆基本手数料</td>
+                        <td>-</td>
+                        <td class="price">1,200円</td>
+                    </tr>
+                    <tr class="row-blue">
+                        <td class="category-cell">オプション基本条件</td>
+                        <td class="subcategory-cell">24時間出張修理オプション</td>
+                        <td class="left-align">◆継続手数料(N＋1〜6か月)</td>
+                        <td>-</td>
+                        <td class="price">250円／継続</td>
+                    </tr>
+                    <tr class="row-blue">
+                        <td class="category-cell">オプション基本条件</td>
+                        <td class="subcategory-cell">24時間出張修理オプション</td>
+                        <td class="left-align">◆継続手数料(N＋7〜9か月)</td>
+                        <td>-</td>
+                        <td class="price">750円／継続</td>
+                    </tr>
+                    <tr class="row-blue">
+                        <td class="category-cell">オプション基本条件</td>
+                        <td class="subcategory-cell">24時間出張修理オプション</td>
+                        <td class="left-align">◆継続手数料(N＋10〜12か月)</td>
+                        <td>-</td>
+                        <td class="price">1,000円／継続</td>
+                    </tr>
+                    <tr class="row-gray">
+                        <td class="category-cell">オプション基本条件</td>
+                        <td class="subcategory-cell"></td>
+                        <td class="left-align">◆セキュリティお任せプラン</td>
+                        <td colspan="2">※別紙参照</td>
+                    </tr>
+                    <tr class="row-gray">
+                        <td class="category-cell">オプション基本条件</td>
+                        <td class="subcategory-cell"></td>
+                        <td class="left-align">◆スマート光ビジネスWi-Fi_バリュープランライト</td>
+                        <td colspan="2">※別紙参照</td>
+                    </tr>
+                    <tr class="row-pink">
+                        <td class="category-cell">オプション基本条件</td>
+                        <td class="subcategory-cell"></td>
+                        <td class="left-align">◆フレッツVPNアドバンス</td>
+                        <td>-</td>
+                        <td class="price">48,000円</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 回線合計表 -->
+        <h2 class="subsection-title">回線合計</h2>
+        <div class="scroll-table">
+            <table class="fee-table">
+                <thead>
+                    <tr>
+                        <th>商材</th>
+                        <th>区分</th>
+                        <th>商品名</th>
+                        <th>マス案件</th>
+                        <th>SOHO案件</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr class="row-blue">
+                        <td class="category-cell">回線合計</td>
+                        <td class="subcategory-cell"></td>
+                        <td class="left-align">◆光ネクスト(オフィスマンションタイプ)</td>
+                        <td class="price">10,000円</td>
+                        <td class="price">52,000円</td>
+                    </tr>
+                    <tr class="row-blue">
+                        <td class="category-cell">回線合計</td>
+                        <td class="subcategory-cell"></td>
+                        <td class="left-align">◆光ネクスト(オフィスファミリータイプ)</td>
+                        <td class="price">10,000円</td>
+                        <td class="price">57,000円</td>
+                    </tr>
+                    <tr class="row-blue">
+                        <td class="category-cell">回線合計</td>
+                        <td class="subcategory-cell"></td>
+                        <td class="left-align">◆光ネクスト(マンションタイプ)</td>
+                        <td class="price">3,000円</td>
+                        <td class="price">43,000円</td>
+                    </tr>
+                    <tr class="row-blue">
+                        <td class="category-cell">回線合計</td>
+                        <td class="subcategory-cell"></td>
+                        <td class="left-align">◆光ネクスト(ファミリータイプ)</td>
+                        <td class="price">5,000円</td>
+                        <td class="price">50,000円</td>
+                    </tr>
+                    <tr class="row-blue">
+                        <td class="category-cell">回線合計</td>
+                        <td class="subcategory-cell"></td>
+                        <td class="left-align">◆ひかり電話ネクスト</td>
+                        <td class="price">5,000円</td>
+                        <td class="price">23,000円</td>
+                    </tr>
+                    <tr class="row-blue">
+                        <td class="category-cell">回線合計</td>
+                        <td class="subcategory-cell"></td>
+                        <td class="left-align">◆光クロス</td>
+                        <td class="price">8,000円</td>
+                        <td class="price">53,000円</td>
+                    </tr>
+                    <tr class="row-blue">
+                        <td class="category-cell">回線合計</td>
+                        <td class="subcategory-cell"></td>
+                        <td class="left-align">◆光クロス(オフィスタイプ)</td>
+                        <td class="price">13,000円</td>
+                        <td class="price">60,000円</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 別紙1：オフィス条件付インセンティブ -->
+        <div class="section-divider">
+            <h2 class="subsection-title">【別紙1】光ネクスト オフィスタイプ・光クロス オフィスタイプ オフィス条件付インセンティブ</h2>
+        </div>
+
+        <div class="note-box-blue">
+            <p>➢ フレッツ光ネクストオフィスタイプの条件付インセンティブのルールは以下の通り。</p>
+            <p>➢ 25年度９月取次分より以下のインセンティブを適用。また本件に伴い「光 オフィス継続インセンティブ」は廃止</p>
+        </div>
+
+        <div class="scroll-table">
+            <table class="fee-table small-table">
+                <thead>
+                    <tr>
+                        <th>No</th>
+                        <th>項目</th>
+                        <th>内容</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1</td>
+                        <td>概要</td>
+                        <td class="left-align">オフィスタイプの継続状況に応じて手数料を設定</td>
+                    </tr>
+                    <tr>
+                        <td>2</td>
+                        <td>対象サービス</td>
+                        <td class="left-align">フレッツ光ネクスト オフィスタイプ、フレッツ光クロス オフィスタイプ</td>
+                    </tr>
+                    <tr>
+                        <td>3</td>
+                        <td>開始時期</td>
+                        <td class="left-align">2025年9月より適用</td>
+                    </tr>
+                    <tr>
+                        <td>4</td>
+                        <td>インセンティブ額</td>
+                        <td class="left-align">
+                            <strong>最大8,000円</strong><br>
+                            N+6継続時　3,000円<br>
+                            N+12継続時　5,000円
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3 style="margin: 20px 0 10px; font-size: 14px;">■ 手数料支払いタイミング</h3>
+        <div class="scroll-table">
+            <table class="fee-table small-table">
+                <thead>
+                    <tr>
+                        <th>N+6継続時</th>
+                        <th>N+12継続時</th>
+                        <th>計</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="price">3,000円</td>
+                        <td class="price">5,000円</td>
+                        <td class="price">8,000円</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="note-box-red">
+            <p><strong>（ご依頼事項）</strong></p>
+            <p>9月以降の条件変更に伴い、NTT西日本より以下基準値について言及されておりますので、継続率の遵守をお願い致します。</p>
+            <p>NTT西日本からの継続率データを基に、以下基準値を下回った場合は、ペナルティの対象となります。</p>
+            <ul>
+                <li>・Ｎ＋６における継続率：<span class="highlight-text">60%以上</span></li>
+                <li>・Ｎ＋１２における継続率：<span class="highlight-text">50%以上</span></li>
+            </ul>
+        </div>
+
+        <!-- 別紙2-1：セキュリティおまかせプラン -->
+        <div class="section-divider">
+            <h2 class="subsection-title">【別紙2-1】セキュリティおまかせプランの手数料変更について（再掲）</h2>
+        </div>
+
+        <div class="note-box-blue">
+            <p>➢2023年12月1日（木）セキュおまのEDR提供開始に伴い、現行のCEも含め手数料を見直す。</p>
+            <p><strong>[主な変更点]</strong></p>
+            <ul>
+                <li>EDRの手数料を新設</li>
+                <li>CEのショットの手数料額については戻入ショット（32,000円）を新たに設けることで増額</li>
+                <li>CEの継続インセンティブの支払い期間の短縮（84ケ月→36ヵ月）</li>
+            </ul>
+        </div>
+
+        <h3 style="margin: 20px 0 10px; font-size: 14px;">■ セキュリティおまかせプラン（EDR）</h3>
+        <div class="scroll-table">
+            <table class="fee-table small-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>MAX<br>(①〜⑥)</th>
+                        <th>①ショット<br>(N+1)</th>
+                        <th style="background:#ffcdd2;">②ショット<br>※初期設定費<br>見合い(N+1)</th>
+                        <th>③継続インセ<br>(N+1〜9)</th>
+                        <th>④継続インセ<br>(N+10〜18)</th>
+                        <th>⑤継続インセ<br>(N+19〜27)</th>
+                        <th>⑥継続インセ<br>(N+28〜36)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="left-align">基本サポート+1ID<br>(EP、CP、EDR共通)<br>※1ID増毎にショット手数料を<br>0.35万円加算</td>
+                        <td class="price">36,720円</td>
+                        <td class="price">2,800円</td>
+                        <td class="price" style="background:#ffcdd2;">8,000円</td>
+                        <td>240円×9</td>
+                        <td>560円×9</td>
+                        <td>880円×9</td>
+                        <td>1,200円×9</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p style="font-size: 12px; color: #c62828; margin-top: 5px;">※EDRは原則お客様設定であるが、継続率担保の観点から<span class="highlight-text">初期設定（工事）をNTT西日本側に依頼することを「標準」</span>とし、その費用見合いをショットに上乗せ</p>
+
+        <h3 style="margin: 20px 0 10px; font-size: 14px;">■ セキュリティおまかせプラン（GW）</h3>
+        <div class="scroll-table">
+            <table class="fee-table small-table">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>MAX<br>(①〜⑥)</th>
+                        <th>①ショット<br>(N+1)</th>
+                        <th style="background:#ffcdd2;">②戻入ショット<br>(N+1)</th>
+                        <th>③継続インセ<br>(N+1〜9)</th>
+                        <th>④継続インセ<br>(N+10〜18)</th>
+                        <th>⑤継続インセ<br>(N+19〜27)</th>
+                        <th>⑥継続インセ<br>(N+28〜36)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td class="left-align">基本サポート+CE10</td>
+                        <td class="price">133,760円</td>
+                        <td rowspan="3" class="price">24,000円</td>
+                        <td rowspan="3" class="price" style="background:#ffcdd2;">32,000円</td>
+                        <td>1,200円×9</td>
+                        <td>1,840円×9</td>
+                        <td>2,480円×9</td>
+                        <td>3,120円×9</td>
+                    </tr>
+                    <tr>
+                        <td class="left-align">基本サポート+CE50</td>
+                        <td class="price">156,800円</td>
+                        <td>1,600円×9</td>
+                        <td>2,400円×9</td>
+                        <td>3,200円×9</td>
+                        <td>4,000円×9</td>
+                    </tr>
+                    <tr>
+                        <td class="left-align">基本サポート+CE100</td>
+                        <td class="price">243,200円</td>
+                        <td>2,800円×9</td>
+                        <td>4,400円×9</td>
+                        <td>6,000円×9</td>
+                        <td>7,600円×9</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+        <p style="font-size: 12px; color: #c62828; margin-top: 5px;">※開通月の翌月から起算して<span class="highlight-text">１２カ月以内にGWが廃止された場合、1契約あたり32,000円を戻入</span></p>
+
+        <!-- 別紙2-2：支払凡例 -->
+        <div class="section-divider">
+            <h2 class="subsection-title">【別紙2-2】支払凡例（再掲）</h2>
+        </div>
+
+        <h3 style="margin: 20px 0 10px; font-size: 14px;">■ セキュリティおまかせプラン（EDR）</h3>
+        <div class="scroll-table">
+            <table class="fee-table small-table">
+                <thead>
+                    <tr>
+                        <th>支払月</th>
+                        <th colspan="3">N＋1（開通の翌月）</th>
+                        <th>N＋2〜9</th>
+                        <th>N+10〜18</th>
+                        <th>N+19〜27</th>
+                        <th>N+28〜36</th>
+                        <th rowspan="2">合計</th>
+                    </tr>
+                    <tr>
+                        <th>内訳</th>
+                        <th>①ショット<br>(ライセンス分)</th>
+                        <th style="background:#ffcdd2;">②ショット<br>(設定費用<br>見合い)</th>
+                        <th>③継続インセ<br>（初月分）</th>
+                        <th>③継続インセ</th>
+                        <th>④継続インセ</th>
+                        <th>⑤継続インセ</th>
+                        <th>⑥継続インセ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>基本サポ+EDR＋CP</td>
+                        <td class="price">8,400円</td>
+                        <td rowspan="3" class="price" style="background:#ffcdd2;">8,000円</td>
+                        <td rowspan="3">240円</td>
+                        <td rowspan="3">240円×8</td>
+                        <td rowspan="3">560円×9</td>
+                        <td rowspan="3">880円×9</td>
+                        <td rowspan="3">1,200円×9</td>
+                        <td class="price">42,320円</td>
+                    </tr>
+                    <tr>
+                        <td>基本サポ+EDR</td>
+                        <td class="price">5,600円</td>
+                        <td class="price">39,520円</td>
+                    </tr>
+                    <tr>
+                        <td>基本サポ+CPorEP</td>
+                        <td class="price">2,800円</td>
+                        <td class="price">36,720円</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3 style="margin: 20px 0 10px; font-size: 14px;">■ セキュリティおまかせプラン（GW）</h3>
+        <div class="scroll-table">
+            <table class="fee-table small-table">
+                <thead>
+                    <tr>
+                        <th>支払月</th>
+                        <th colspan="3">N＋1（開通の翌月）</th>
+                        <th>N＋2〜9</th>
+                        <th>N+10〜18</th>
+                        <th>N+19〜27</th>
+                        <th>N+28〜36</th>
+                        <th rowspan="2">合計</th>
+                    </tr>
+                    <tr>
+                        <th>内訳</th>
+                        <th>①ショット<br>(UTM分)</th>
+                        <th style="background:#ffcdd2;">②戻入ショット</th>
+                        <th>③継続インセ<br>（初月分）</th>
+                        <th>③継続インセ</th>
+                        <th>④継続インセ</th>
+                        <th>⑤継続インセ</th>
+                        <th>⑥継続インセ</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>基本サポート+CE10</td>
+                        <td rowspan="3" class="price">24,000円</td>
+                        <td rowspan="3" class="price" style="background:#ffcdd2;">32,000円</td>
+                        <td>1,200円</td>
+                        <td>1,200円×8</td>
+                        <td>1,840円×9</td>
+                        <td>2,480円×9</td>
+                        <td>3,120円×9</td>
+                        <td class="price">133,760円</td>
+                    </tr>
+                    <tr>
+                        <td>基本サポート+CE50</td>
+                        <td>1,600円</td>
+                        <td>1,600円×8</td>
+                        <td>2,400円×9</td>
+                        <td>3,200円×9</td>
+                        <td>4,000円×9</td>
+                        <td class="price">156,800円</td>
+                    </tr>
+                    <tr>
+                        <td>基本サポート+CE100</td>
+                        <td>2,800円</td>
+                        <td>2,800円×8</td>
+                        <td>4,400円×9</td>
+                        <td>6,000円×9</td>
+                        <td>7,600円×9</td>
+                        <td class="price">243,200円</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 別紙3：スマート光ビジネスWi-Fi -->
+        <div class="section-divider">
+            <h2 class="subsection-title">【別紙3】スマート光ビジネスWi-Fi_バリュープランライトの手数料について</h2>
+        </div>
+
+        <div class="note-box-blue">
+            <p>➢ ビジネスWi-Fiバリュープランライトについて、10/1より取次開始。<br>
+            （10月のみ最短開通日は10/28、以降は取次日から10営業日以降）</p>
+            <p>➢ 手数料については1AP毎にショット9,500円、継続インセ800円（24か月）の最大28,700円。</p>
+            <p>➢ 商材の詳細については別途共有の代理店マニュアルをご参考願います。</p>
+        </div>
+
+        <h3 style="margin: 20px 0 10px; font-size: 14px;">〈サービス概要〉</h3>
+        <div class="scroll-table">
+            <table class="fee-table small-table">
+                <thead>
+                    <tr>
+                        <th>商品名</th>
+                        <th>月額料金</th>
+                        <th>初期費用</th>
+                        <th>解約金</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>スマート光ビジネスWi-Fi_バリュープランライト</td>
+                        <td class="price">1,800円</td>
+                        <td class="price">10,000円</td>
+                        <td class="price">10,000円/2年以内</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <h3 style="margin: 20px 0 10px; font-size: 14px;">〈手数料〉</h3>
+        <div class="scroll-table">
+            <table class="fee-table small-table">
+                <thead>
+                    <tr>
+                        <th>項目</th>
+                        <th>金額</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><strong>手数料(ショット)</strong></td>
+                        <td class="price">9,500円/1AP</td>
+                    </tr>
+                    <tr>
+                        <td><strong>手数料(継続N〜N24)</strong></td>
+                        <td class="price">800円/1AP</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 支払サイト -->
+        <div class="section-divider">
+            <h2 class="subsection-title">支払サイト</h2>
+        </div>
+
+        <div class="note-box">
+            <ul style="list-style: none; padding: 0; margin: 0; line-height: 2.2;">
+                <li><strong>◆回線（基本条件）</strong>：完成月の翌月末</li>
+                <li><strong>◆SOHO＿一時金インセンティブ／ SOHO＿継続利用インセンティブ</strong>：完成月の翌月末<br>
+                　※特定コードでの運用となる。<br>
+                　※お支払い後、事前にご報告頂いた案件以外を特定コードへ投入された場合は未報告案件へ戻入あり。</li>
+                <li><strong>◆SOHO＿条件付きインセンティブ</strong>：開通月の6か月および12ヵ月経過時点での継続に応じ支払い</li>
+                <li><strong>◆継続手数料</strong>：開通の翌月以降の月末に継続利用の確認ができたもの。</li>
+                <li><strong>◆オプション</strong>：ショット・継続共：完成月の翌月末<br>
+                　※ひかり電話オフィスエース：完成月の翌々月末<br>
+                　※セキュリティおまかせプラン：NTT開通処理の関係上、支払いが翌々月となるケースあり。<br>
+                　※オフィスプライムサポート：開通(サービス開始)から1ヶ月後以降に継続利用の確認ができたもの。</li>
+            </ul>
+        </div>
+
+        <!-- SOHOインセンティブ適用コード -->
+        <h2 class="subsection-title">SOHOインセンティブ適用コード及び支払い条件</h2>
+
+        <div class="note-box-blue">
+            <p><strong>◆SOHO一時金＋継続利用インセンティブ対象コード</strong></p>
+            <p>店舗コード：●●●</p>
+            <br>
+            <p><strong>◆運用ルール</strong></p>
+            <p>※別紙「SOHO判定ルール」資料を参照願います。</p>
+            <br>
+            <p><strong>◆支払い条件</strong></p>
+            <p>取次月の翌月から起算して12ヶ月以内に開通した案件に支払う。</p>
+        </div>
+
+        <div style="margin-top: 30px; text-align: center;">
+            <button id="pdf-export-btn" style="background: #0066cc; color: white; border: none; padding: 12px 30px; font-size: 16px; border-radius: 5px; cursor: pointer;">このページをPDF出力</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="pdf-export.js"></script>
+    <script>
+        // 割引適用ボタン
+        document.getElementById('apply-discount-btn').addEventListener('click', function() {
+            const discount = parseInt(document.getElementById('page-discount-rate').value) || 0;
+            if (discount > 0) {
+                applyDiscountToPage(discount);
+                document.getElementById('discount-note').style.display = 'inline';
+                document.getElementById('discount-note').textContent = '※' + discount + '%割引適用中';
+                this.disabled = true;
+                this.textContent = '適用済み';
+            }
+        });
+
+        // PDF出力ボタン
+        document.getElementById('pdf-export-btn').addEventListener('click', function() {
+            exportPageToPDF('NTT西日本（フレッツ光）');
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>U-POWER 手数料表</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .service-page {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #4a90d9;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .service-title {
+            font-size: 28px;
+            color: #333;
+            border-bottom: 3px solid #8bc34a;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+        .section-title {
+            font-size: 20px;
+            color: #8bc34a;
+            margin: 40px 0 20px;
+            padding-left: 15px;
+            border-left: 4px solid #8bc34a;
+        }
+        .fee-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 30px;
+            font-size: 12px;
+        }
+        .fee-table th {
+            background: #8bc34a;
+            color: white;
+            padding: 10px 8px;
+            text-align: center;
+            border: 1px solid #7cb342;
+        }
+        .fee-table td {
+            padding: 8px;
+            border: 1px solid #ddd;
+            text-align: center;
+        }
+        .fee-table tr:nth-child(even) {
+            background: #f9f9f9;
+        }
+        .fee-table .row-header {
+            background: #e8f5e9;
+            font-weight: bold;
+            text-align: left;
+        }
+        .note-box {
+            background: #fff3cd;
+            border: 1px solid #ffc107;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .note-box ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin: 20px 0;
+        }
+        .info-card {
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            overflow: hidden;
+        }
+        .info-card-header {
+            background: #8bc34a;
+            color: white;
+            padding: 10px 15px;
+            font-weight: bold;
+        }
+        .info-card-body {
+            padding: 15px;
+        }
+        .scroll-table {
+            overflow-x: auto;
+        }
+        @media (max-width: 768px) {
+            .info-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+        /* 割引コントロール */
+        .discount-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 5px;
+        }
+        .discount-controls label {
+            font-weight: bold;
+        }
+        .discount-controls select {
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .discount-controls button {
+            padding: 8px 20px;
+            font-size: 14px;
+            background: #8bc34a;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .discount-controls button:hover {
+            background: #7cb342;
+        }
+        .discount-note {
+            color: #c62828;
+            font-weight: bold;
+            margin-left: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="service-page">
+        <a href="../index.html" class="back-link">← 一覧に戻る</a>
+
+        <h1 class="service-title">U-POWER 手数料表（代理店様用）</h1>
+
+        <!-- 割引コントロール（PDF出力時は非表示） -->
+        <div class="discount-controls" id="discount-controls">
+            <label for="page-discount-rate">%変更：</label>
+            <select id="page-discount-rate">
+                <option value="0">なし</option>
+                <option value="20">20%</option>
+                <option value="25">25%</option>
+                <option value="30">30%</option>
+                <option value="35">35%</option>
+                <option value="40">40%</option>
+                <option value="45">45%</option>
+                <option value="50">50%</option>
+                <option value="55">55%</option>
+                <option value="60">60%</option>
+                <option value="65">65%</option>
+                <option value="70">70%</option>
+                <option value="75">75%</option>
+            </select>
+            <button id="apply-discount-btn">割引適用</button>
+            <span class="discount-note" id="discount-note" style="display: none;">※割引適用中</span>
+        </div>
+
+        <!-- 販売手数料の考え方 -->
+        <h2 class="section-title">販売手数料の考え方</h2>
+        <p style="margin-bottom: 20px; line-height: 1.8;">
+            料金明細の使用電力量（検針月の明細金額が対象）に下記月別明細金額掛率を掛け合わせ、想定明細料金算出用エリア別プラン一覧で試算したものを基に金額に応じた販売手数料をお支払いいたします。なお、相対契約時も同様の考え方になります。
+        </p>
+
+        <h3 style="margin: 20px 0 10px; font-size: 16px;">月別明細金額掛率</h3>
+        <div class="scroll-table">
+            <table class="fee-table">
+                <thead>
+                    <tr>
+                        <th>4月</th><th>5月</th><th>6月</th><th>7月</th><th>8月</th><th>9月</th><th>10月</th><th>11月</th><th>12月</th><th>1月</th><th>2月</th><th>3月</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr>
+                        <td>1.1</td><td>1.1</td><td>1.2</td><td>1.0</td><td>0.9</td><td>1.0</td><td>1.2</td><td>1.0</td><td>0.9</td><td>0.8</td><td>0.9</td><td>0.9</td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 手数料_電灯 -->
+        <h2 class="section-title">手数料_電灯（代理店様用）</h2>
+        <div class="scroll-table">
+            <table class="fee-table">
+                <thead>
+                    <tr>
+                        <th>電灯手数料</th><th>北海道</th><th>東北</th><th>東京</th><th>中部</th><th>北陸</th><th>関西</th><th>中国</th><th>四国</th><th>九州</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="row-header">7,000未満</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                    <tr><td class="row-header">7,000〜8,500未満</td><td>13500</td><td>3600</td><td>9000</td><td>5400</td><td>0</td><td>4050</td><td>4500</td><td>4500</td><td>1800</td></tr>
+                    <tr><td class="row-header">8,500〜10,000未満</td><td>18000</td><td>13500</td><td>13500</td><td>10800</td><td>3600</td><td>12600</td><td>13500</td><td>9000</td><td>9000</td></tr>
+                    <tr><td class="row-header">10,000〜12,000未満</td><td>22500</td><td>13500</td><td>18000</td><td>10800</td><td>3600</td><td>13500</td><td>13500</td><td>9000</td><td>9000</td></tr>
+                    <tr><td class="row-header">12,000〜14,000未満</td><td>22500</td><td>33300</td><td>20700</td><td>36000</td><td>45000</td><td>40500</td><td>27000</td><td>36900</td><td>27000</td></tr>
+                    <tr><td class="row-header">14,000〜16,000未満</td><td>22500</td><td>37800</td><td>31500</td><td>40500</td><td>57600</td><td>45000</td><td>31500</td><td>56700</td><td>31500</td></tr>
+                    <tr><td class="row-header">16,000〜18,000未満</td><td>31500</td><td>46800</td><td>40500</td><td>49500</td><td>71100</td><td>63000</td><td>49500</td><td>66600</td><td>40500</td></tr>
+                    <tr><td class="row-header">18,000〜20,000未満</td><td>49500</td><td>64800</td><td>49500</td><td>58500</td><td>85500</td><td>81000</td><td>67500</td><td>72000</td><td>49500</td></tr>
+                    <tr><td class="row-header">20,000〜22,000未満</td><td>67500</td><td>82800</td><td>67500</td><td>67500</td><td>93600</td><td>85500</td><td>76500</td><td>76500</td><td>67500</td></tr>
+                    <tr><td class="row-header">22,000〜24,000未満</td><td>76500</td><td>91800</td><td>72000</td><td>67500</td><td>97200</td><td>94500</td><td>85500</td><td>81000</td><td>72000</td></tr>
+                    <tr><td class="row-header">24,000〜26,000未満</td><td>81000</td><td>96300</td><td>76500</td><td>72000</td><td>100800</td><td>99000</td><td>90000</td><td>85500</td><td>76500</td></tr>
+                    <tr><td class="row-header">26,000〜28,000未満</td><td>85500</td><td>100800</td><td>85500</td><td>81000</td><td>104400</td><td>103500</td><td>94500</td><td>90000</td><td>85500</td></tr>
+                    <tr><td class="row-header">28,000〜30,000未満</td><td>90000</td><td>105300</td><td>94500</td><td>90000</td><td>108000</td><td>108000</td><td>99000</td><td>94500</td><td>94500</td></tr>
+                    <tr><td class="row-header">30,000〜32,000未満</td><td>94500</td><td>109800</td><td>99000</td><td>94500</td><td>111600</td><td>112500</td><td>103500</td><td>99000</td><td>99000</td></tr>
+                    <tr><td class="row-header">32,000〜34,000未満</td><td>99000</td><td>114300</td><td>103500</td><td>103500</td><td>115200</td><td>117000</td><td>108000</td><td>103500</td><td>104400</td></tr>
+                    <tr><td class="row-header">34,000〜36,000未満</td><td>103500</td><td>118800</td><td>108000</td><td>108000</td><td>118800</td><td>121500</td><td>112500</td><td>108000</td><td>111600</td></tr>
+                    <tr><td class="row-header">36,000〜38,000未満</td><td>108000</td><td>123300</td><td>112500</td><td>112500</td><td>122400</td><td>126000</td><td>117000</td><td>112500</td><td>116100</td></tr>
+                    <tr><td class="row-header">38,000〜40,000未満</td><td>112500</td><td>127800</td><td>117000</td><td>117000</td><td>126000</td><td>130500</td><td>121500</td><td>117000</td><td>120600</td></tr>
+                    <tr><td class="row-header">40,000〜50,000未満</td><td>117000</td><td>132300</td><td>126000</td><td>126000</td><td>144000</td><td>135000</td><td>126000</td><td>121500</td><td>129600</td></tr>
+                    <tr><td class="row-header">50,000〜60,000未満</td><td>135000</td><td>150300</td><td>144000</td><td>135000</td><td>162000</td><td>153000</td><td>144000</td><td>135000</td><td>147600</td></tr>
+                    <tr><td class="row-header">60,000〜70,000未満</td><td>153000</td><td>168300</td><td>162000</td><td>144000</td><td>180000</td><td>171000</td><td>162000</td><td>153000</td><td>165600</td></tr>
+                    <tr><td class="row-header">70,000〜80,000未満</td><td>171000</td><td>186300</td><td>180000</td><td>153000</td><td>198000</td><td>189000</td><td>180000</td><td>171000</td><td>183600</td></tr>
+                    <tr><td class="row-header">80,000〜90,000未満</td><td>189000</td><td>204300</td><td>198000</td><td>162000</td><td>216000</td><td>207000</td><td>198000</td><td>189000</td><td>201600</td></tr>
+                    <tr><td class="row-header">90,000〜100,000未満</td><td>207000</td><td>222300</td><td>216000</td><td>171000</td><td>234000</td><td>225000</td><td>216000</td><td>207000</td><td>219600</td></tr>
+                    <tr><td class="row-header">100,000円以上</td><td>225000</td><td>240300</td><td>234000</td><td>198000</td><td>252000</td><td>243000</td><td>234000</td><td>225000</td><td>237600</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 手数料_動力 -->
+        <h2 class="section-title">手数料_動力（代理店様用）</h2>
+        <div class="scroll-table">
+            <table class="fee-table">
+                <thead>
+                    <tr>
+                        <th>契約容量</th><th>北海道</th><th>東北</th><th>東京</th><th>中部</th><th>北陸</th><th>関西</th><th>中国</th><th>四国</th><th>九州</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr><td class="row-header">0.5</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                    <tr><td class="row-header">1</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                    <tr><td class="row-header">2</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td><td>0</td></tr>
+                    <tr><td class="row-header">3</td><td>33120</td><td>3600</td><td>8280</td><td>4500</td><td>22770</td><td>4500</td><td>8460</td><td>16830</td><td>4500</td></tr>
+                    <tr><td class="row-header">4</td><td>42300</td><td>4500</td><td>18810</td><td>9000</td><td>38070</td><td>9000</td><td>18990</td><td>30150</td><td>10080</td></tr>
+                    <tr><td class="row-header">5</td><td>42300</td><td>6300</td><td>29250</td><td>13500</td><td>42300</td><td>13500</td><td>29520</td><td>42300</td><td>18450</td></tr>
+                    <tr><td class="row-header">6</td><td>42300</td><td>7470</td><td>39690</td><td>21600</td><td>42300</td><td>21510</td><td>40050</td><td>42300</td><td>26730</td></tr>
+                    <tr><td class="row-header">7</td><td>42300</td><td>12600</td><td>42300</td><td>29070</td><td>42300</td><td>28890</td><td>42300</td><td>42300</td><td>35100</td></tr>
+                    <tr><td class="row-header">8</td><td>42300</td><td>17730</td><td>42300</td><td>33570</td><td>42300</td><td>33390</td><td>42300</td><td>42300</td><td>42300</td></tr>
+                    <tr><td class="row-header">9</td><td>42300</td><td>22770</td><td>42300</td><td>42300</td><td>42300</td><td>42300</td><td>42300</td><td>42300</td><td>42300</td></tr>
+                    <tr><td class="row-header">10</td><td>43200</td><td>27900</td><td>43200</td><td>42300</td><td>42300</td><td>42300</td><td>42300</td><td>42300</td><td>42300</td></tr>
+                    <tr><td class="row-header">11</td><td>48600</td><td>33030</td><td>48600</td><td>42300</td><td>42300</td><td>42300</td><td>42300</td><td>42300</td><td>42300</td></tr>
+                    <tr><td class="row-header">12</td><td>54000</td><td>38070</td><td>54000</td><td>45000</td><td>42300</td><td>45000</td><td>45000</td><td>45000</td><td>45000</td></tr>
+                    <tr><td class="row-header">13</td><td>59400</td><td>42300</td><td>59400</td><td>49500</td><td>42300</td><td>49500</td><td>49500</td><td>49500</td><td>49500</td></tr>
+                    <tr><td class="row-header">14</td><td>64800</td><td>42300</td><td>64800</td><td>54000</td><td>42300</td><td>54000</td><td>54000</td><td>54000</td><td>54000</td></tr>
+                    <tr><td class="row-header">15</td><td>70200</td><td>42300</td><td>70200</td><td>58500</td><td>44100</td><td>58500</td><td>58500</td><td>58500</td><td>58500</td></tr>
+                    <tr><td class="row-header">16</td><td>75600</td><td>42300</td><td>75600</td><td>63000</td><td>47700</td><td>63000</td><td>63000</td><td>63000</td><td>63000</td></tr>
+                    <tr><td class="row-header">17</td><td>81000</td><td>42300</td><td>81000</td><td>67500</td><td>50400</td><td>67500</td><td>67500</td><td>67500</td><td>67500</td></tr>
+                    <tr><td class="row-header">18</td><td>86400</td><td>42300</td><td>86400</td><td>72000</td><td>53100</td><td>72000</td><td>72000</td><td>72000</td><td>72000</td></tr>
+                    <tr><td class="row-header">19</td><td>91800</td><td>42300</td><td>91800</td><td>76500</td><td>56700</td><td>76500</td><td>76500</td><td>76500</td><td>76500</td></tr>
+                    <tr><td class="row-header">20</td><td>97200</td><td>42300</td><td>97200</td><td>81000</td><td>59400</td><td>81000</td><td>81000</td><td>81000</td><td>81000</td></tr>
+                    <tr><td class="row-header">21</td><td>102600</td><td>42300</td><td>97200</td><td>85500</td><td>62100</td><td>85500</td><td>85500</td><td>85500</td><td>85500</td></tr>
+                    <tr><td class="row-header">22</td><td>108000</td><td>42300</td><td>97200</td><td>90000</td><td>65700</td><td>90000</td><td>90000</td><td>90000</td><td>90000</td></tr>
+                </tbody>
+            </table>
+        </div>
+
+        <!-- 負荷率について -->
+        <div class="info-grid">
+            <div class="info-card">
+                <div class="info-card-header">負荷率と単価</div>
+                <div class="info-card-body">
+                    <table class="fee-table" style="margin: 0;">
+                        <tr><th>負荷率</th><th>単価</th></tr>
+                        <tr><td>10%まで</td><td>ベース</td></tr>
+                        <tr><td>15%まで</td><td>ベースの60%</td></tr>
+                        <tr><td>20%まで</td><td>ベースの18%</td></tr>
+                        <tr><td>20%超過</td><td>獲得不可</td></tr>
+                    </table>
+                    <p style="margin-top: 10px; font-size: 12px; color: #666;">
+                        ※東北・北陸は10%超過から獲得不可<br>
+                        ※負荷率：月間想定使用電力量÷契約電力÷720
+                    </p>
+                </div>
+            </div>
+            <div class="info-card">
+                <div class="info-card-header">特記事項</div>
+                <div class="info-card-body">
+                    <h4 style="margin-bottom: 10px;">減額率</h4>
+                    <table class="fee-table" style="margin: 0 0 15px 0;">
+                        <tr><th>エリア</th><th>リセットなしエリア</th><th>リセットありエリア</th></tr>
+                        <tr><td>対象</td><td>中部・関西・九州</td><td>北海道・東北・東京・北陸・中国・四国</td></tr>
+                        <tr><td>相対割引1〜10%</td><td>4%ずつ減額</td><td>5%ずつ減額</td></tr>
+                        <tr><td>相対割引11%〜25%</td><td>3%ずつ減額</td><td>5%ずつ減額</td></tr>
+                    </table>
+                    <h4 style="margin-bottom: 10px;">インセンティブ</h4>
+                    <ul style="font-size: 13px; line-height: 1.8;">
+                        <li>各月の手数料対象となる電灯の平均使用量が800kWh以上だった場合、電灯1口2,000円(税抜)をお支払いいたします。</li>
+                        <li>短期解約によるインセンティブの戻入はございません。</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+        <div class="note-box">
+            <strong>注意事項</strong>
+            <ul>
+                <li>原則、申込時から直近12ヶ月以内の料金明細をお客さまから頂いてください</li>
+                <li>料金明細がない場合は、Web明細書/請求書などの記載となる書類（現在の電力会社、お客さま番号・供給地点番号・契約電流と容量・電気使用電力量・電気料金・検針月など）をお客さまから頂いてください</li>
+                <li>必ず低圧料金試算シートを使って負荷率のチェックをお願いします。</li>
+            </ul>
+        </div>
+
+        <div style="margin-top: 30px; text-align: center;">
+            <button id="pdf-export-btn" style="padding: 15px 40px; font-size: 16px; font-weight: bold; color: white; background: linear-gradient(135deg, #e74c3c, #c0392b); border: none; border-radius: 5px; cursor: pointer;">
+                このページをPDF出力
+            </button>
+        </div>
+    </div>
+
+    <!-- PDF出力用ライブラリ -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="pdf-export.js"></script>
+    <script>
+        document.getElementById('pdf-export-btn').addEventListener('click', function() {
+            exportPageToPDF('U-POWER');
+        });
+
+        // 割引適用ボタン
+        document.getElementById('apply-discount-btn').addEventListener('click', function() {
+            const discount = parseInt(document.getElementById('page-discount-rate').value) || 0;
+            if (discount > 0) {
+                applyDiscountToPage(discount);
+                document.getElementById('discount-note').style.display = 'inline';
+                document.getElementById('discount-note').textContent = '※' + discount + '%割引適用中';
+                this.disabled = true;
+                this.textContent = '適用済み';
+            }
+        });
+    </script>
+</body>
+</html>

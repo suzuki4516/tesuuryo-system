@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Uber Eats 手数料表</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .service-page {
+            max-width: 1100px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #4a90d9;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .service-title {
+            font-size: 28px;
+            color: #333;
+            border-bottom: 3px solid #003399;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+        .section-title {
+            font-size: 18px;
+            color: #003399;
+            margin: 30px 0 15px;
+            padding-left: 12px;
+            border-left: 4px solid #003399;
+        }
+        .tax-note {
+            text-align: right;
+            font-size: 12px;
+            color: #666;
+            margin: 5px 0 20px;
+        }
+        .fee-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 12px;
+        }
+        .fee-table th {
+            background: #003399;
+            color: white;
+            padding: 8px 10px;
+            text-align: center;
+            border: 1px solid #002277;
+        }
+        .fee-table td {
+            padding: 8px 10px;
+            border: 1px solid #ddd;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .fee-table tr:nth-child(even) {
+            background: #f5f5f5;
+        }
+        .fee-table .price {
+            font-weight: bold;
+            color: #c62828;
+        }
+        .fee-table .row-header {
+            background: #e8eaf6;
+            font-weight: bold;
+            text-align: left;
+        }
+        .fee-table .product-cell {
+            background: #f0f4ff;
+            font-weight: bold;
+        }
+        .notes-section {
+            margin: 30px 0;
+            padding: 20px;
+            background: #f9f9f9;
+            border-radius: 5px;
+            border-left: 4px solid #003399;
+        }
+        .notes-section h4 {
+            margin: 0 0 15px 0;
+            color: #003399;
+            font-size: 14px;
+        }
+        .notes-section p {
+            margin: 0 0 12px 0;
+            line-height: 1.8;
+            color: #555;
+            font-size: 12px;
+            text-indent: -1em;
+            padding-left: 1em;
+        }
+        .notes-section p:last-child {
+            margin-bottom: 0;
+        }
+        .exclusion-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #fff3e0;
+            border: 1px solid #ff9800;
+            border-radius: 5px;
+        }
+        .exclusion-section h4 {
+            margin: 0 0 10px 0;
+            color: #e65100;
+            font-size: 13px;
+        }
+        .exclusion-section ul {
+            margin: 0;
+            padding-left: 20px;
+        }
+        .exclusion-section li {
+            margin-bottom: 6px;
+            line-height: 1.6;
+            color: #555;
+            font-size: 12px;
+        }
+        .period-label {
+            display: inline-block;
+            background: #003399;
+            color: white;
+            padding: 5px 15px;
+            border-radius: 3px;
+            font-size: 14px;
+            margin-bottom: 15px;
+        }
+        .period-label.tentative {
+            background: #e65100;
+        }
+        /* 割引コントロール */
+        .discount-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 5px;
+        }
+        .discount-controls label {
+            font-weight: bold;
+        }
+        .discount-controls select {
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .discount-controls button {
+            padding: 8px 20px;
+            font-size: 14px;
+            background: #003399;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .discount-controls button:hover {
+            background: #002277;
+        }
+        .discount-note {
+            color: #c62828;
+            font-weight: bold;
+            margin-left: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="service-page">
+        <a href="../index.html" class="back-link">← 一覧に戻る</a>
+
+        <h1 class="service-title">Uber Eats / 出前館 / Menu 手数料表</h1>
+        <p class="tax-note">*価格はすべて税別です</p>
+
+        <!-- 割引コントロール（PDF出力時は非表示） -->
+        <div class="discount-controls" id="discount-controls">
+            <label for="page-discount-rate">%変更：</label>
+            <select id="page-discount-rate">
+                <option value="0">なし</option>
+                <option value="20">20%</option>
+                <option value="25">25%</option>
+                <option value="30">30%</option>
+                <option value="35">35%</option>
+                <option value="40">40%</option>
+                <option value="45">45%</option>
+                <option value="50">50%</option>
+                <option value="55">55%</option>
+                <option value="60">60%</option>
+                <option value="65">65%</option>
+                <option value="70">70%</option>
+                <option value="75">75%</option>
+            </select>
+            <button id="apply-discount-btn">割引適用</button>
+            <span class="discount-note" id="discount-note" style="display: none;">※割引適用中</span>
+        </div>
+
+        <!-- 2025年12月31日まで -->
+        <h2 class="section-title">手数料条件（2025年12月31日まで）</h2>
+        <table class="fee-table">
+            <thead>
+                <tr>
+                    <th>商材</th>
+                    <th>エリア</th>
+                    <th>基本<br>コミッション</th>
+                    <th>初回注文</th>
+                    <th>タブレット付帯<br>減額</th>
+                    <th>成果地点</th>
+                    <th>締め日</th>
+                    <th>支払いサイト</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="product-cell" rowspan="4">Uber<br>Eats</td>
+                    <td>HP/LE</td>
+                    <td>-</td>
+                    <td class="price">92,000円</td>
+                    <td class="no-discount">-10,000円</td>
+                    <td rowspan="4">契約締結 /<br>初回注文</td>
+                    <td rowspan="4">15日</td>
+                    <td rowspan="4">翌月末</td>
+                </tr>
+                <tr>
+                    <td>PO/CP</td>
+                    <td>-</td>
+                    <td class="price">92,000円</td>
+                    <td class="no-discount">-10,000円</td>
+                </tr>
+                <tr>
+                    <td>P1</td>
+                    <td class="price">4,800円</td>
+                    <td class="price">3,200円</td>
+                    <td class="no-discount">-10,000円</td>
+                </tr>
+                <tr>
+                    <td>OD/P2</td>
+                    <td class="price">3,200円</td>
+                    <td>-</td>
+                    <td class="no-discount">-10,000円</td>
+                </tr>
+                <tr>
+                    <td class="product-cell" rowspan="2">出前館</td>
+                    <td>エリアA</td>
+                    <td class="price">8,000円</td>
+                    <td>-</td>
+                    <td class="no-discount">-10,000円</td>
+                    <td rowspan="2">公開日</td>
+                    <td rowspan="2">25日</td>
+                    <td rowspan="2">翌月末</td>
+                </tr>
+                <tr>
+                    <td>エリアB</td>
+                    <td class="price">4,000円</td>
+                    <td>-</td>
+                    <td class="no-discount">-10,000円</td>
+                </tr>
+                <tr>
+                    <td class="product-cell">Menu</td>
+                    <td>実店舗</td>
+                    <td class="price">40,000円</td>
+                    <td>-</td>
+                    <td class="no-discount">-10,000円</td>
+                    <td>アプリ公開後の<br>店舗アプリログイン</td>
+                    <td>末日</td>
+                    <td>翌月末</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- 2026年1月1日以降 -->
+        <h2 class="section-title">【仮】手数料条件（2026年1月1日以降）</h2>
+        <table class="fee-table">
+            <thead>
+                <tr>
+                    <th>商材</th>
+                    <th>エリア</th>
+                    <th>基本<br>コミッション</th>
+                    <th>初回注文</th>
+                    <th>タブレット付帯<br>減額</th>
+                    <th>成果地点</th>
+                    <th>締め日</th>
+                    <th>支払いサイト</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td class="product-cell" rowspan="4">Uber<br>Eats</td>
+                    <td>HP/LE</td>
+                    <td class="price">16,000円</td>
+                    <td class="price">28,000円</td>
+                    <td class="no-discount">-10,000円</td>
+                    <td rowspan="4">契約締結 /<br>初回注文</td>
+                    <td rowspan="4">15日</td>
+                    <td rowspan="4">翌月末</td>
+                </tr>
+                <tr>
+                    <td>PO/CP</td>
+                    <td class="price">16,000円</td>
+                    <td class="price">20,000円</td>
+                    <td class="no-discount">-10,000円</td>
+                </tr>
+                <tr>
+                    <td>P1</td>
+                    <td class="price">4,800円</td>
+                    <td class="price">3,200円</td>
+                    <td class="no-discount">-10,000円</td>
+                </tr>
+                <tr>
+                    <td>OD/P2</td>
+                    <td class="price">3,200円</td>
+                    <td>-</td>
+                    <td class="no-discount">-10,000円</td>
+                </tr>
+                <tr>
+                    <td class="product-cell" rowspan="2">出前館</td>
+                    <td>エリアA</td>
+                    <td class="price">8,000円</td>
+                    <td>-</td>
+                    <td class="no-discount">-10,000円</td>
+                    <td rowspan="2">公開日</td>
+                    <td rowspan="2">25日</td>
+                    <td rowspan="2">翌月末</td>
+                </tr>
+                <tr>
+                    <td>エリアB</td>
+                    <td class="price">4,000円</td>
+                    <td>-</td>
+                    <td class="no-discount">-10,000円</td>
+                </tr>
+                <tr>
+                    <td class="product-cell">Menu</td>
+                    <td>実店舗</td>
+                    <td class="price">40,000円</td>
+                    <td>-</td>
+                    <td class="no-discount">-10,000円</td>
+                    <td>アプリ公開後の<br>店舗アプリログイン</td>
+                    <td>末日</td>
+                    <td>翌月末</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <!-- 注意事項 -->
+        <div class="notes-section">
+            <h4>◇注意事項</h4>
+            <p>◇コミッション支払対象案件がメーカーにて支払適用外であることを確認できた場合、確認月の翌月末日までに、当該案件に関しお支払済みのコミッションをご返金いただきます。</p>
+            <p>◇法令に反する行為、弊社・メーカーのイメージを失墜させる営業行為が発覚した場合及び短期解約や重大クレーム、不正取次等により、メーカー及び上位店より戻入対象となった場合は確認後、ご請求させて頂きます。</p>
+            <p>◇本書に明記されていないサービスについては、手数料の支払対象外となります。</p>
+            <p>◇法令に反する行為、弊社・メーカーのイメージを失墜させる営業行為が発覚した場合には弊社が負担にて支払済の手数料を貴社に請求させていただき、以降の手数料を支払対象外とします。</p>
+            <p>◇不正獲得による重大クレーム等により販売促進費が発生した場合は確認後、別途ご請求させて頂きます。</p>
+            <p>◇提携会社へ取次の斡旋を行う際は社名及び販売手法を事前に各許諾の上行うこと。万が一、許可なく取次を行っていることが発覚した場合には取次を停止して頂きます。尚、傘下店の更なる再委託は禁止とします。</p>
+            <p>◇貴社に対する新たな条件表の発行がない場合は、本条件表は原契約が存続する限り同一条件で1ヶ月ごとに更新されるものとし、以後原契約が終了するまで同様とします。</p>
+        </div>
+
+        <div class="exclusion-section">
+            <h4>※ 獲得会員が以下のいずれかに該当する場合、手数料支払の対象外とする。</h4>
+            <ul>
+                <li>1）現在、本サービスを利用している場合</li>
+                <li>2）現在、他社が交渉段階にある案件を獲得した場合</li>
+                <li>3）本サービスの販売可能エリア外での獲得の場合</li>
+                <li>4）利用開始月から翌月までの手数料集計期間中による退会の場合</li>
+                <li>5）キャッシュバックによる獲得</li>
+            </ul>
+        </div>
+
+        <div style="margin-top: 30px; text-align: center;">
+            <button id="pdf-export-btn" style="background: #003399; color: white; border: none; padding: 12px 30px; font-size: 16px; border-radius: 5px; cursor: pointer;">このページをPDF出力</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="pdf-export.js"></script>
+    <script>
+        document.getElementById('pdf-export-btn').addEventListener('click', function() {
+            exportPageToPDF('Uber Eats');
+        });
+
+        // 割引適用ボタン
+        document.getElementById('apply-discount-btn').addEventListener('click', function() {
+            const discount = parseInt(document.getElementById('page-discount-rate').value) || 0;
+            if (discount > 0) {
+                applyDiscountToPage(discount);
+                document.getElementById('discount-note').style.display = 'inline';
+                document.getElementById('discount-note').textContent = '※' + discount + '%割引適用中';
+                this.disabled = true;
+                this.textContent = '適用済み';
+            }
+        });
+    </script>
+</body>
+</html>

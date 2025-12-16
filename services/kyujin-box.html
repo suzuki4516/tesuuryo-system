@@ -1,0 +1,316 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>求人ボックス 手数料表</title>
+    <link rel="stylesheet" href="../style.css">
+    <style>
+        .service-page {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            color: #4a90d9;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+        .service-title {
+            font-size: 28px;
+            color: #333;
+            border-bottom: 3px solid #003399;
+            padding-bottom: 15px;
+            margin-bottom: 30px;
+        }
+        .section-title {
+            font-size: 18px;
+            color: #003399;
+            margin: 30px 0 15px;
+            padding-left: 12px;
+            border-left: 4px solid #003399;
+        }
+        .tax-note {
+            text-align: right;
+            font-size: 12px;
+            color: #666;
+            margin: 5px 0 20px;
+        }
+        .fee-table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+            font-size: 13px;
+        }
+        .fee-table th {
+            background: #003399;
+            color: white;
+            padding: 10px 12px;
+            text-align: center;
+            border: 1px solid #002277;
+        }
+        .fee-table td {
+            padding: 10px 12px;
+            border: 1px solid #ddd;
+            text-align: center;
+            vertical-align: middle;
+        }
+        .fee-table tr:nth-child(even) {
+            background: #f5f5f5;
+        }
+        .fee-table .price {
+            font-weight: bold;
+            color: #c62828;
+        }
+        .fee-table .left-align {
+            text-align: left;
+        }
+        .fee-table .condition-cell {
+            text-align: left;
+            font-size: 12px;
+            line-height: 1.6;
+        }
+        .info-section {
+            margin: 20px 0;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 5px;
+        }
+        .info-section h4 {
+            margin: 0 0 10px 0;
+            color: #003399;
+            font-size: 14px;
+        }
+        .info-section p {
+            margin: 0;
+            line-height: 1.8;
+            color: #555;
+            font-size: 13px;
+        }
+        .warning-box {
+            background: #fff3e0;
+            border: 1px solid #ff9800;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .warning-box h4 {
+            margin: 0 0 10px 0;
+            color: #e65100;
+            font-size: 14px;
+        }
+        .warning-box p {
+            margin: 0 0 10px 0;
+            line-height: 1.8;
+            color: #555;
+            font-size: 13px;
+        }
+        .warning-box ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .warning-box li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+            color: #555;
+            font-size: 13px;
+        }
+        .prohibition-box {
+            background: #ffebee;
+            border: 1px solid #f44336;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .prohibition-box h4 {
+            margin: 0 0 10px 0;
+            color: #c62828;
+            font-size: 14px;
+        }
+        .prohibition-box ul {
+            margin: 10px 0;
+            padding-left: 20px;
+        }
+        .prohibition-box li {
+            margin-bottom: 8px;
+            line-height: 1.6;
+            color: #555;
+            font-size: 13px;
+        }
+        .premise-box {
+            background: #e3f2fd;
+            border: 1px solid #2196f3;
+            border-radius: 5px;
+            padding: 15px;
+            margin: 20px 0;
+        }
+        .premise-box h4 {
+            margin: 0 0 10px 0;
+            color: #1565c0;
+            font-size: 14px;
+        }
+        .premise-box p {
+            margin: 0;
+            line-height: 1.8;
+            color: #555;
+            font-size: 13px;
+        }
+        /* 割引コントロール */
+        .discount-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 5px;
+        }
+        .discount-controls label {
+            font-weight: bold;
+        }
+        .discount-controls select {
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .discount-controls button {
+            padding: 8px 20px;
+            font-size: 14px;
+            background: #003399;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .discount-controls button:hover {
+            background: #002277;
+        }
+        .discount-note {
+            color: #c62828;
+            font-weight: bold;
+            margin-left: auto;
+        }
+    </style>
+</head>
+<body>
+    <div class="service-page">
+        <a href="../index.html" class="back-link">← 一覧に戻る</a>
+
+        <h1 class="service-title">求人ボックス 手数料表</h1>
+        <p class="tax-note">*価格はすべて税別です</p>
+
+        <!-- 割引コントロール（PDF出力時は非表示） -->
+        <div class="discount-controls" id="discount-controls">
+            <label for="page-discount-rate">%変更：</label>
+            <select id="page-discount-rate">
+                <option value="0">なし</option>
+                <option value="20">20%</option>
+                <option value="25">25%</option>
+                <option value="30">30%</option>
+                <option value="35">35%</option>
+                <option value="40">40%</option>
+                <option value="45">45%</option>
+                <option value="50">50%</option>
+                <option value="55">55%</option>
+                <option value="60">60%</option>
+                <option value="65">65%</option>
+                <option value="70">70%</option>
+                <option value="75">75%</option>
+            </select>
+            <button id="apply-discount-btn">割引適用</button>
+            <span class="discount-note" id="discount-note" style="display: none;">※割引適用中</span>
+        </div>
+
+        <!-- メイン手数料テーブル -->
+        <h2 class="section-title">手数料条件</h2>
+        <table class="fee-table">
+            <thead>
+                <tr>
+                    <th>NO</th>
+                    <th>商材名</th>
+                    <th>手数料</th>
+                    <th>支払条件</th>
+                    <th>支払サイト</th>
+                    <th>戻入</th>
+                    <th>備考</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>1</td>
+                    <td>求人ボックス</td>
+                    <td class="price">¥16,000</td>
+                    <td class="condition-cell">利用契約が成立し、本商材の利用料金の請求を行った案件</td>
+                    <td>支払条件の翌月末日</td>
+                    <td>無し</td>
+                    <td>-</td>
+                </tr>
+                <tr>
+                    <td>2</td>
+                    <td>求人ボックス以外のサービス</td>
+                    <td class="price">¥8,000</td>
+                    <td class="condition-cell">求人ボックスの利用契約が成立せず、求人ボックス以外のサービスの利用契約が成立し、本商材の利用料金の請求を行った案件</td>
+                    <td>支払条件の翌月末日</td>
+                    <td>無し</td>
+                    <td>-</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="premise-box">
+            <h4>■ 前提</h4>
+            <p>本サービスの利用が見込めない顧客への販売は禁止<br>
+            不適切と判断した場合は戻入、稼働停止等の措置を実施します</p>
+        </div>
+
+        <div class="warning-box">
+            <h4>■ 戻入</h4>
+            <p>無し<br>
+            ただし、紹介業務において次に揚げる行為があったと判断した場合には、支払済みの手数料の返還を請求できるものとし、またそれ以降の手数料の支払を停止することができるものとする。</p>
+            <ul>
+                <li>（1）見込顧客に本商材の利用意思がないことを知りながら当該見込顧客を紹介する行為</li>
+                <li>（2）当初から利用契約の解約を予定している見込顧客であることを知りながら当該見込顧客を紹介する行為</li>
+                <li>（3）その他顧客紹介契約書に違反する行為</li>
+            </ul>
+        </div>
+
+        <div class="prohibition-box">
+            <h4>■ 禁止事項</h4>
+            <ul>
+                <li>短期廃止を想起させる勧奨を禁止とする</li>
+                <li>顧客に対して競合他社のサービスへの切り替えを勧奨する行為（チャーン営業）を禁止とする</li>
+            </ul>
+        </div>
+
+        <div style="margin-top: 30px; text-align: center;">
+            <button id="pdf-export-btn" style="background: #003399; color: white; border: none; padding: 12px 30px; font-size: 16px; border-radius: 5px; cursor: pointer;">このページをPDF出力</button>
+        </div>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="pdf-export.js"></script>
+    <script>
+        document.getElementById('pdf-export-btn').addEventListener('click', function() {
+            exportPageToPDF('求人ボックス');
+        });
+
+        // 割引適用ボタン
+        document.getElementById('apply-discount-btn').addEventListener('click', function() {
+            const discount = parseInt(document.getElementById('page-discount-rate').value) || 0;
+            if (discount > 0) {
+                applyDiscountToPage(discount);
+                document.getElementById('discount-note').style.display = 'inline';
+                document.getElementById('discount-note').textContent = '※' + discount + '%割引適用中';
+                this.disabled = true;
+                this.textContent = '適用済み';
+            }
+        });
+    </script>
+</body>
+</html>

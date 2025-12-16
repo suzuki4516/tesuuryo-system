@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>手数料表管理システム</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <h1>手数料表管理システム</h1>
+
+        <div class="controls">
+            <div class="discount-control">
+                <label for="discount-rate">%変更：</label>
+                <select id="discount-rate">
+                    <option value="0">なし</option>
+                    <option value="20">20%</option>
+                    <option value="25">25%</option>
+                    <option value="30">30%</option>
+                    <option value="35">35%</option>
+                    <option value="40">40%</option>
+                    <option value="45">45%</option>
+                    <option value="50">50%</option>
+                    <option value="55">55%</option>
+                    <option value="60">60%</option>
+                    <option value="65">65%</option>
+                    <option value="70">70%</option>
+                    <option value="75">75%</option>
+                </select>
+            </div>
+            <button id="pdf-export-btn" class="pdf-btn">PDF作成</button>
+        </div>
+
+        <table class="service-table">
+            <thead>
+                <tr>
+                    <th class="checkbox-col">選択</th>
+                    <th class="service-col">商材名</th>
+                </tr>
+            </thead>
+            <tbody id="service-list">
+                <!-- サービス一覧はJSで動的に生成 -->
+            </tbody>
+        </table>
+
+        <div class="button-group">
+            <button id="select-all-btn" class="action-btn">全選択</button>
+            <button id="deselect-all-btn" class="action-btn">全解除</button>
+        </div>
+    </div>
+
+    <!-- jsPDF CDN -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <!-- jsPDF日本語フォント対応 -->
+    <script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.1/dist/jspdf.plugin.autotable.min.js"></script>
+    <!-- html2canvas（日本語PDF対応用） -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+
+    <!-- ライブラリ読み込み確認 -->
+    <script>
+        window.addEventListener('DOMContentLoaded', function() {
+            if (typeof window.jspdf === 'undefined') {
+                console.error('jsPDFの読み込みに失敗しました');
+                alert('PDF機能に必要なライブラリの読み込みに失敗しました。インターネット接続を確認してください。');
+            }
+            if (typeof html2canvas === 'undefined') {
+                console.error('html2canvasの読み込みに失敗しました');
+                alert('PDF機能に必要なライブラリの読み込みに失敗しました。インターネット接続を確認してください。');
+            }
+            console.log('ライブラリ読み込み状態:', {
+                jspdf: typeof window.jspdf !== 'undefined',
+                html2canvas: typeof html2canvas !== 'undefined'
+            });
+        });
+    </script>
+
+    <script src="app.js"></script>
+
+    <!-- PDF出力用の非表示エリア -->
+    <div id="pdf-preview" style="display: none;"></div>
+</body>
+</html>
