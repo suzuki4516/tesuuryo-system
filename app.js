@@ -3,7 +3,7 @@
 const services = [
     {
         id: 'website',
-        name: 'WebSite',
+        name: 'Webサイト作成',
         page: 'services/website.html',
         fees: [
             { item: 'BASIC（ページ数:1）', price: 8800 },
@@ -13,7 +13,7 @@ const services = [
     },
     {
         id: 'websystem',
-        name: 'websystem',
+        name: 'Webシステム作成',
         page: 'services/websystem.html',
         noDiscount: true,
         fees: [
@@ -86,7 +86,7 @@ const services = [
     },
     {
         id: 'ubereats',
-        name: 'Uber Eats / 出前館 / Menu',
+        name: 'Uber Eats',
         page: 'services/ubereats.html',
         fees: [
             { item: 'Uber Eats HP/LE', price: 92000 },
