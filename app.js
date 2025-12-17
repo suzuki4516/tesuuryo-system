@@ -17,7 +17,7 @@ const services = [
         page: 'services/websystem.html',
         noDiscount: true,
         fees: [
-            { item: '手数料', price: 0, note: 'システム費用の25%' }
+            { item: '手数料', price: 0, note: 'システム費用の20％～' }
         ]
     },
     {
@@ -96,7 +96,7 @@ const services = [
     },
     {
         id: 'usen4',
-        name: 'USEN商材4種',
+        name: 'トスアップUSEN商材4種',
         page: 'services/usen4.html',
         fees: [
             { item: 'USEN 光plus（新設）', price: 20000 },

@@ -64,7 +64,7 @@
         }
         .fee-table .price {
             font-weight: bold;
-            color: #c62828;
+            color: #333;
         }
         .fee-table .row-header {
             background: #e8eaf6;
@@ -194,8 +194,9 @@
                 <option value="65">65%</option>
                 <option value="70">70%</option>
                 <option value="75">75%</option>
+                <option value="80">80%</option>
             </select>
-            <button id="apply-discount-btn">割引適用</button>
+            <button id="apply-discount-btn">自社利益適用</button>
             <span class="discount-note" id="discount-note" style="display: none;">※割引適用中</span>
         </div>
 
@@ -387,7 +388,7 @@
             if (discount > 0) {
                 applyDiscountToPage(discount);
                 document.getElementById('discount-note').style.display = 'inline';
-                document.getElementById('discount-note').textContent = '※' + discount + '%割引適用中';
+                document.getElementById('discount-note').textContent = '※' + discount + '%自社利益適用中';
                 this.disabled = true;
                 this.textContent = '適用済み';
             }
