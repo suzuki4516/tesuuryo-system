@@ -201,7 +201,7 @@ async function exportPageToPDF(serviceName, autoClose = false) {
             return (rectA.top - contentRect.top) - (rectB.top - contentRect.top);
         });
 
-        // 先にすべてのセクションの位置情報を取得
+        // 先にすべてのセクションの位置情報を取得（ピクセル単位）
         const sectionInfos = sections.map(section => {
             const rect = section.getBoundingClientRect();
             return {
@@ -209,78 +209,6 @@ async function exportPageToPDF(serviceName, autoClose = false) {
                 topInContent: rect.top - contentRect.top,
                 height: rect.height
             };
-        });
-
-        // 改ページが必要なセクションを計算（スペース追加の影響を考慮）
-        const spacers = [];
-        let cumulativeSpaceMM = 0;
-
-        // 署名欄の情報を先に取得
-        const signatureInfo = sectionInfos.find(info => info.element.classList.contains('signature-section'));
-        const signatureTopMM = signatureInfo ? signatureInfo.topInContent * pxToMM : Infinity;
-        const signatureHeightMM = signatureInfo ? signatureInfo.height * pxToMM : 0;
-
-        sectionInfos.forEach((info, index) => {
-            const topInMM = (info.topInContent * pxToMM) + cumulativeSpaceMM;
-            const sectionHeightMM = info.height * pxToMM;
-
-            // このセクションがどのページに属するかを計算
-            const pageNum = Math.floor(topInMM / effectivePageHeightMM);
-            const positionInPage = topInMM - (pageNum * effectivePageHeightMM);
-            const bottomInPage = positionInPage + sectionHeightMM;
-
-            const isSignatureSection = info.element.classList.contains('signature-section');
-
-            // 次のセクションが署名欄かどうかをチェック
-            const nextInfo = sectionInfos[index + 1];
-            const nextIsSignature = nextInfo && nextInfo.element.classList.contains('signature-section');
-
-            // セクションがページ境界をまたぐ場合（ページ上部からでも検出）
-            const crossesPageBoundary = bottomInPage > effectivePageHeightMM;
-            const fitsOnOnePage = sectionHeightMM < effectivePageHeightMM * 0.85;
-            // ページの上部付近（15mm以内）から始まるセクションはスキップ（既に次ページに配置されている）
-            const startsNearTop = positionInPage <= 15;
-
-            // 署名欄の場合：分割を絶対に防ぐ（ページ境界をまたぐ場合は必ず次ページへ）
-            if (isSignatureSection) {
-                // positionInPage > 15 の条件を外し、ページをまたぐ場合は必ず次ページへ
-                if (bottomInPage > effectivePageHeightMM && fitsOnOnePage) {
-                    const spaceNeededMM = effectivePageHeightMM - positionInPage + 10;
-                    const spaceInPx = spaceNeededMM / pxToMM;
-
-                    const spacer = document.createElement('div');
-                    spacer.className = 'pdf-page-spacer';
-                    spacer.style.height = spaceInPx + 'px';
-                    spacer.style.width = '100%';
-                    spacer.style.backgroundColor = '#ffffff';
-
-                    info.element.parentNode.insertBefore(spacer, info.element);
-                    spacers.push(spacer);
-                    cumulativeSpaceMM += spaceNeededMM;
-                }
-                return;
-            }
-
-            // 署名欄の直前のセクションはスペーサー追加をスキップ（署名欄を孤立させない）
-            if (nextIsSignature) {
-                return;
-            }
-
-            // 通常のセクション：ページをまたぐ場合は次のページへ（ただし既にページ上部にある場合はスキップ）
-            if (crossesPageBoundary && fitsOnOnePage && !startsNearTop) {
-                const spaceNeededMM = effectivePageHeightMM - positionInPage + 15;
-                const spaceInPx = spaceNeededMM / pxToMM;
-
-                const spacer = document.createElement('div');
-                spacer.className = 'pdf-page-spacer';
-                spacer.style.height = spaceInPx + 'px';
-                spacer.style.width = '100%';
-                spacer.style.backgroundColor = '#ffffff';
-
-                info.element.parentNode.insertBefore(spacer, info.element);
-                spacers.push(spacer);
-                cumulativeSpaceMM += spaceNeededMM;
-            }
         });
 
         // html2canvasでキャプチャ
@@ -294,9 +222,6 @@ async function exportPageToPDF(serviceName, autoClose = false) {
             height: content.scrollHeight
         });
 
-        // スペーサーを削除
-        spacers.forEach(spacer => spacer.remove());
-
         // 非表示にした要素を元に戻す
         if (backLink) backLink.style.display = '';
         if (pdfBtn) pdfBtn.style.display = '';
@@ -309,21 +234,60 @@ async function exportPageToPDF(serviceName, autoClose = false) {
 
         const doc = new jsPDF('p', 'mm', 'a4');
 
-        // 総ページ数を計算
-        const totalPages = Math.ceil(imgHeight / effectivePageHeightMM);
+        // キャンバスの高さからピクセル→mm変換係数を計算
+        const canvasPxToMM = imgHeight / canvas.height;
 
         // 1ページあたりのキャンバス高さ（ピクセル）
-        const pageHeightInPx = (effectivePageHeightMM / imgHeight) * canvas.height;
+        const pageHeightInPx = effectivePageHeightMM / canvasPxToMM;
 
-        // 各ページを描画（キャンバスをページごとにスライス）
-        for (let page = 0; page < totalPages; page++) {
+        // html2canvasのscale倍率を考慮
+        const scale = canvas.width / content.scrollWidth;
+
+        // セクションの位置をスケール後のピクセル単位で記録
+        const sectionBoundaries = sectionInfos.map(info => ({
+            top: info.topInContent * scale,
+            bottom: (info.topInContent + info.height) * scale,
+            height: info.height * scale
+        }));
+
+        // ページの切れ目を計算（セクションの途中で切らないように調整）
+        const pageBreaks = [0]; // 最初のページは0から始まる
+        let currentY = 0;
+
+        while (currentY + pageHeightInPx < canvas.height) {
+            let idealBreak = currentY + pageHeightInPx;
+
+            // この切れ目がセクションの途中にあるかチェック
+            let adjustedBreak = idealBreak;
+            for (const section of sectionBoundaries) {
+                // セクションがこの切れ目をまたいでいる場合
+                if (section.top < idealBreak && section.bottom > idealBreak) {
+                    // セクションが1ページに収まる場合は、セクションの開始位置で切る
+                    if (section.height < pageHeightInPx * 0.9) {
+                        adjustedBreak = section.top - 10 * scale; // 10px余裕を持たせる
+                        break;
+                    }
+                }
+            }
+
+            // 調整後の切れ目が前のページより前にならないようにする
+            if (adjustedBreak <= currentY + pageHeightInPx * 0.3) {
+                adjustedBreak = idealBreak;
+            }
+
+            pageBreaks.push(adjustedBreak);
+            currentY = adjustedBreak;
+        }
+        pageBreaks.push(canvas.height); // 最後のページの終端
+
+        // 各ページを描画
+        for (let page = 0; page < pageBreaks.length - 1; page++) {
             if (page > 0) {
                 doc.addPage();
             }
 
-            // このページで切り出す部分を計算
-            const sourceY = page * pageHeightInPx;
-            const sourceHeight = Math.min(pageHeightInPx, canvas.height - sourceY);
+            const sourceY = pageBreaks[page];
+            const sourceHeight = pageBreaks[page + 1] - pageBreaks[page];
 
             // 一時キャンバスを作成してページ部分を切り出す
             const pageCanvas = document.createElement('canvas');
@@ -331,6 +295,8 @@ async function exportPageToPDF(serviceName, autoClose = false) {
             pageCanvas.height = sourceHeight;
 
             const ctx = pageCanvas.getContext('2d');
+            ctx.fillStyle = '#ffffff';
+            ctx.fillRect(0, 0, pageCanvas.width, pageCanvas.height);
             ctx.drawImage(
                 canvas,
                 0, sourceY,                    // 元画像の切り出し開始位置
@@ -340,7 +306,7 @@ async function exportPageToPDF(serviceName, autoClose = false) {
             );
 
             const pageImgData = pageCanvas.toDataURL('image/png');
-            const pageImgHeight = (sourceHeight * imgWidth) / canvas.width;
+            const pageImgHeight = sourceHeight * canvasPxToMM;
 
             doc.addImage(pageImgData, 'PNG', margin, margin, imgWidth, pageImgHeight);
         }
