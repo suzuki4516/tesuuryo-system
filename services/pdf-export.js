@@ -184,7 +184,11 @@ async function exportPageToPDF(serviceName, autoClose = false) {
             '.signature-section',
             '.contract-notice',
             '.info-box',
-            'table'
+            '.info-grid',
+            '.info-card',
+            'table',
+            'h2',
+            'h3'
         ];
 
         const sections = Array.from(content.querySelectorAll(sectionSelectors.join(', ')));
@@ -231,9 +235,11 @@ async function exportPageToPDF(serviceName, autoClose = false) {
             const nextInfo = sectionInfos[index + 1];
             const nextIsSignature = nextInfo && nextInfo.element.classList.contains('signature-section');
 
-            // セクションがページ境界をまたぐ場合
-            const crossesPageBoundary = positionInPage > 15 && bottomInPage > effectivePageHeightMM;
+            // セクションがページ境界をまたぐ場合（ページ上部からでも検出）
+            const crossesPageBoundary = bottomInPage > effectivePageHeightMM;
             const fitsOnOnePage = sectionHeightMM < effectivePageHeightMM * 0.85;
+            // ページの上部付近（15mm以内）から始まるセクションはスキップ（既に次ページに配置されている）
+            const startsNearTop = positionInPage <= 15;
 
             // 署名欄の場合：分割を絶対に防ぐ（ページ境界をまたぐ場合は必ず次ページへ）
             if (isSignatureSection) {
@@ -260,8 +266,8 @@ async function exportPageToPDF(serviceName, autoClose = false) {
                 return;
             }
 
-            // 通常のセクション：ページをまたぐ場合は次のページへ
-            if (crossesPageBoundary && fitsOnOnePage) {
+            // 通常のセクション：ページをまたぐ場合は次のページへ（ただし既にページ上部にある場合はスキップ）
+            if (crossesPageBoundary && fitsOnOnePage && !startsNearTop) {
                 const spaceNeededMM = effectivePageHeightMM - positionInPage + 15;
                 const spaceInPx = spaceNeededMM / pxToMM;
 
