@@ -308,19 +308,41 @@ async function exportPageToPDF(serviceName, autoClose = false) {
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
 
         const doc = new jsPDF('p', 'mm', 'a4');
-        const imgData = canvas.toDataURL('image/png');
 
         // 総ページ数を計算
         const totalPages = Math.ceil(imgHeight / effectivePageHeightMM);
 
-        // 各ページを描画
+        // 1ページあたりのキャンバス高さ（ピクセル）
+        const pageHeightInPx = (effectivePageHeightMM / imgHeight) * canvas.height;
+
+        // 各ページを描画（キャンバスをページごとにスライス）
         for (let page = 0; page < totalPages; page++) {
             if (page > 0) {
                 doc.addPage();
             }
-            // 各ページでの画像のY位置を計算（ページが進むごとにマイナス方向にオフセット）
-            const yPosition = margin - (page * effectivePageHeightMM);
-            doc.addImage(imgData, 'PNG', margin, yPosition, imgWidth, imgHeight);
+
+            // このページで切り出す部分を計算
+            const sourceY = page * pageHeightInPx;
+            const sourceHeight = Math.min(pageHeightInPx, canvas.height - sourceY);
+
+            // 一時キャンバスを作成してページ部分を切り出す
+            const pageCanvas = document.createElement('canvas');
+            pageCanvas.width = canvas.width;
+            pageCanvas.height = sourceHeight;
+
+            const ctx = pageCanvas.getContext('2d');
+            ctx.drawImage(
+                canvas,
+                0, sourceY,                    // 元画像の切り出し開始位置
+                canvas.width, sourceHeight,    // 切り出すサイズ
+                0, 0,                          // 出力先の位置
+                canvas.width, sourceHeight     // 出力サイズ
+            );
+
+            const pageImgData = pageCanvas.toDataURL('image/png');
+            const pageImgHeight = (sourceHeight * imgWidth) / canvas.width;
+
+            doc.addImage(pageImgData, 'PNG', margin, margin, imgWidth, pageImgHeight);
         }
 
         // PDFを保存
