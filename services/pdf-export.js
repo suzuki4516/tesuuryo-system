@@ -309,19 +309,18 @@ async function exportPageToPDF(serviceName, autoClose = false) {
 
         const doc = new jsPDF('p', 'mm', 'a4');
         const imgData = canvas.toDataURL('image/png');
-        let heightLeft = imgHeight;
-        let position = margin;
 
-        // 最初のページ
-        doc.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
-        heightLeft -= effectivePageHeightMM;
+        // 総ページ数を計算
+        const totalPages = Math.ceil(imgHeight / effectivePageHeightMM);
 
-        // 複数ページ対応
-        while (heightLeft > 0) {
-            doc.addPage();
-            position = margin - (imgHeight - heightLeft);
-            doc.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
-            heightLeft -= effectivePageHeightMM;
+        // 各ページを描画
+        for (let page = 0; page < totalPages; page++) {
+            if (page > 0) {
+                doc.addPage();
+            }
+            // 各ページでの画像のY位置を計算（ページが進むごとにマイナス方向にオフセット）
+            const yPosition = margin - (page * effectivePageHeightMM);
+            doc.addImage(imgData, 'PNG', margin, yPosition, imgWidth, imgHeight);
         }
 
         // PDFを保存
