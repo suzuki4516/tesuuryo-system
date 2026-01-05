@@ -174,9 +174,6 @@
     <div class="service-page">
         <a href="../index.html" class="back-link">← 一覧に戻る</a>
 
-        <h1 class="service-title">Uber Eats / 出前館 / Menu 手数料表</h1>
-        <p class="tax-note">*価格はすべて税別です</p>
-
         <!-- 割引コントロール（PDF出力時は非表示） -->
         <div class="discount-controls" id="discount-controls">
             <label for="page-discount-rate">%変更：</label>
@@ -198,7 +195,16 @@
             </select>
             <button id="apply-discount-btn">自社利益適用</button>
             <span class="discount-note" id="discount-note" style="display: none;">※割引適用中</span>
+            <button id="pdf-export-btn" style="background: #003399; color: white; border: none; padding: 8px 20px; font-size: 14px; border-radius: 4px; cursor: pointer; margin-left: auto;">PDF出力</button>
         </div>
+
+        <div class="contract-notice" style="margin: 20px 0; padding: 15px; background: #f9f9f9; border-left: 4px solid #333;">
+            <h3 style="margin: 0 0 10px 0; font-size: 16px; color: #333;">個別条件書</h3>
+            <p style="margin: 0; font-size: 14px; color: #555;">本書は営業委託基本契約書 第5条・第15条に基づくものとする。</p>
+        </div>
+
+        <h1 class="service-title">Uber Eats / 出前館 / Menu 手数料表</h1>
+        <p class="tax-note">*価格はすべて税別です</p>
 
         <!-- 2025年12月31日まで -->
         <h2 class="section-title">手数料条件（2025年12月31日まで）</h2>
@@ -216,49 +222,65 @@
             </thead>
             <tbody>
                 <tr>
-                    <td class="product-cell" rowspan="4">Uber<br>Eats</td>
+                    <td class="product-cell">Uber Eats</td>
                     <td>HP/LE</td>
                     <td>-</td>
                     <td class="price">92,000円</td>
-                    <td rowspan="4">契約締結 /<br>初回注文</td>
-                    <td rowspan="4">15日</td>
-                    <td rowspan="4">翌月末</td>
+                    <td>契約締結 / 初回注文</td>
+                    <td>15日</td>
+                    <td>翌月末</td>
                 </tr>
                 <tr>
+                    <td class="product-cell">Uber Eats</td>
                     <td>PO/CP</td>
                     <td>-</td>
                     <td class="price">92,000円</td>
+                    <td>契約締結 / 初回注文</td>
+                    <td>15日</td>
+                    <td>翌月末</td>
                 </tr>
                 <tr>
+                    <td class="product-cell">Uber Eats</td>
                     <td>P1</td>
                     <td class="price">4,800円</td>
                     <td class="price">3,200円</td>
+                    <td>契約締結 / 初回注文</td>
+                    <td>15日</td>
+                    <td>翌月末</td>
                 </tr>
                 <tr>
+                    <td class="product-cell">Uber Eats</td>
                     <td>OD/P2</td>
                     <td class="price">3,200円</td>
                     <td>-</td>
+                    <td>契約締結 / 初回注文</td>
+                    <td>15日</td>
+                    <td>翌月末</td>
                 </tr>
                 <tr>
-                    <td class="product-cell" rowspan="2">出前館</td>
+                    <td class="product-cell">出前館</td>
                     <td>エリアA</td>
                     <td class="price">8,000円</td>
                     <td>-</td>
-                    <td rowspan="2">公開日</td>
-                    <td rowspan="2">25日</td>
-                    <td rowspan="2">翌月末</td>
+                    <td>公開日</td>
+                    <td>25日</td>
+                    <td>翌月末</td>
                 </tr>
                 <tr>
+                    <td class="product-cell">出前館</td>
                     <td>エリアB</td>
                     <td class="price">4,000円</td>
                     <td>-</td>
+                    <td>公開日</td>
+                    <td>25日</td>
+                    <td>翌月末</td>
                 </tr>
                 <tr>
                     <td class="product-cell">Menu</td>
                     <td>実店舗</td>
                     <td class="price">40,000円</td>
                     <td>-</td>
-                    <td>アプリ公開後の<br>店舗アプリログイン</td>
+                    <td>アプリ公開後の店舗アプリログイン</td>
                     <td>末日</td>
                     <td>翌月末</td>
                 </tr>
@@ -282,49 +304,65 @@
             </thead>
             <tbody>
                 <tr>
-                    <td class="product-cell" rowspan="4">Uber<br>Eats</td>
+                    <td class="product-cell">Uber Eats</td>
                     <td>HP/LE</td>
                     <td class="price">16,000円</td>
                     <td class="price">28,000円</td>
-                    <td rowspan="4">契約締結 /<br>初回注文</td>
-                    <td rowspan="4">15日</td>
-                    <td rowspan="4">翌月末</td>
+                    <td>契約締結 / 初回注文</td>
+                    <td>15日</td>
+                    <td>翌月末</td>
                 </tr>
                 <tr>
+                    <td class="product-cell">Uber Eats</td>
                     <td>PO/CP</td>
                     <td class="price">16,000円</td>
                     <td class="price">20,000円</td>
+                    <td>契約締結 / 初回注文</td>
+                    <td>15日</td>
+                    <td>翌月末</td>
                 </tr>
                 <tr>
+                    <td class="product-cell">Uber Eats</td>
                     <td>P1</td>
                     <td class="price">4,800円</td>
                     <td class="price">3,200円</td>
+                    <td>契約締結 / 初回注文</td>
+                    <td>15日</td>
+                    <td>翌月末</td>
                 </tr>
                 <tr>
+                    <td class="product-cell">Uber Eats</td>
                     <td>OD/P2</td>
                     <td class="price">3,200円</td>
                     <td>-</td>
+                    <td>契約締結 / 初回注文</td>
+                    <td>15日</td>
+                    <td>翌月末</td>
                 </tr>
                 <tr>
-                    <td class="product-cell" rowspan="2">出前館</td>
+                    <td class="product-cell">出前館</td>
                     <td>エリアA</td>
                     <td class="price">8,000円</td>
                     <td>-</td>
-                    <td rowspan="2">公開日</td>
-                    <td rowspan="2">25日</td>
-                    <td rowspan="2">翌月末</td>
+                    <td>公開日</td>
+                    <td>25日</td>
+                    <td>翌月末</td>
                 </tr>
                 <tr>
+                    <td class="product-cell">出前館</td>
                     <td>エリアB</td>
                     <td class="price">4,000円</td>
                     <td>-</td>
+                    <td>公開日</td>
+                    <td>25日</td>
+                    <td>翌月末</td>
                 </tr>
                 <tr>
                     <td class="product-cell">Menu</td>
                     <td>実店舗</td>
                     <td class="price">40,000円</td>
                     <td>-</td>
-                    <td>アプリ公開後の<br>店舗アプリログイン</td>
+                    <td>アプリ公開後の店舗アプリログイン</td>
                     <td>末日</td>
                     <td>翌月末</td>
                 </tr>
@@ -355,8 +393,19 @@
             </ul>
         </div>
 
-        <div style="margin-top: 30px; text-align: center;">
-            <button id="pdf-export-btn" style="background: #003399; color: white; border: none; padding: 12px 30px; font-size: 16px; border-radius: 5px; cursor: pointer;">このページをPDF出力</button>
+        <div class="signature-section" style="margin-top: 50px; padding: 30px; border: 1px solid #ddd; border-radius: 5px;">
+            <div style="margin-bottom: 40px;">
+                <p style="font-weight: bold; margin-bottom: 15px;">甲（委託者）</p>
+                <p style="margin: 10px 0;">住所：</p>
+                <p style="margin: 10px 0;">商号・氏名：</p>
+                <p style="margin: 10px 0;">代表者名：<span style="margin-left: 200px;">印</span></p>
+            </div>
+            <div>
+                <p style="font-weight: bold; margin-bottom: 15px;">乙（受託者）</p>
+                <p style="margin: 10px 0;">住所：</p>
+                <p style="margin: 10px 0;">商号・氏名：</p>
+                <p style="margin: 10px 0;">代表者名：<span style="margin-left: 200px;">印</span></p>
+            </div>
         </div>
     </div>
 

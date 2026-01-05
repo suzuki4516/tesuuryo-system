@@ -152,6 +152,131 @@ async function exportPageToPDF(serviceName, autoClose = false) {
         if (pdfBtn) pdfBtn.style.display = 'none';
         if (discountControls) discountControls.style.display = 'none';
 
+        // PDF用の設定
+        const margin = 10; // マージン（mm）
+        const pageWidthMM = 210;
+        const pageHeightMM = 297;
+        const effectivePageHeightMM = pageHeightMM - (margin * 2);
+        const effectivePageWidthMM = pageWidthMM - (margin * 2);
+
+        // コンテンツの幅からピクセル→mm変換係数を計算
+        const contentWidth = content.scrollWidth;
+        const pxToMM = effectivePageWidthMM / contentWidth;
+
+        // 改ページを避けるべきセクション要素を取得
+        const sectionSelectors = [
+            '.section-title',
+            '.subsection-title',
+            '.section-divider',
+            '.fee-table',
+            '.scroll-table',
+            '.table-scroll',
+            '.info-section',
+            '.warning-box',
+            '.prohibition-box',
+            '.premise-box',
+            '.note-box',
+            '.note-box-blue',
+            '.note-box-red',
+            '.notes-section',
+            '.exclusion-section',
+            '.other-section',
+            '.signature-section',
+            '.contract-notice',
+            '.info-box',
+            'table'
+        ];
+
+        const sections = Array.from(content.querySelectorAll(sectionSelectors.join(', ')));
+        const contentRect = content.getBoundingClientRect();
+
+        // セクションを上から順にソート
+        sections.sort((a, b) => {
+            const rectA = a.getBoundingClientRect();
+            const rectB = b.getBoundingClientRect();
+            return (rectA.top - contentRect.top) - (rectB.top - contentRect.top);
+        });
+
+        // 先にすべてのセクションの位置情報を取得
+        const sectionInfos = sections.map(section => {
+            const rect = section.getBoundingClientRect();
+            return {
+                element: section,
+                topInContent: rect.top - contentRect.top,
+                height: rect.height
+            };
+        });
+
+        // 改ページが必要なセクションを計算（スペース追加の影響を考慮）
+        const spacers = [];
+        let cumulativeSpaceMM = 0;
+
+        // 署名欄の情報を先に取得
+        const signatureInfo = sectionInfos.find(info => info.element.classList.contains('signature-section'));
+        const signatureTopMM = signatureInfo ? signatureInfo.topInContent * pxToMM : Infinity;
+        const signatureHeightMM = signatureInfo ? signatureInfo.height * pxToMM : 0;
+
+        sectionInfos.forEach((info, index) => {
+            const topInMM = (info.topInContent * pxToMM) + cumulativeSpaceMM;
+            const sectionHeightMM = info.height * pxToMM;
+
+            // このセクションがどのページに属するかを計算
+            const pageNum = Math.floor(topInMM / effectivePageHeightMM);
+            const positionInPage = topInMM - (pageNum * effectivePageHeightMM);
+            const bottomInPage = positionInPage + sectionHeightMM;
+
+            const isSignatureSection = info.element.classList.contains('signature-section');
+
+            // 次のセクションが署名欄かどうかをチェック
+            const nextInfo = sectionInfos[index + 1];
+            const nextIsSignature = nextInfo && nextInfo.element.classList.contains('signature-section');
+
+            // セクションがページ境界をまたぐ場合
+            const crossesPageBoundary = positionInPage > 15 && bottomInPage > effectivePageHeightMM;
+            const fitsOnOnePage = sectionHeightMM < effectivePageHeightMM * 0.85;
+
+            // 署名欄の場合：分割を絶対に防ぐ（ページ境界をまたぐ場合は必ず次ページへ）
+            if (isSignatureSection) {
+                // positionInPage > 15 の条件を外し、ページをまたぐ場合は必ず次ページへ
+                if (bottomInPage > effectivePageHeightMM && fitsOnOnePage) {
+                    const spaceNeededMM = effectivePageHeightMM - positionInPage + 10;
+                    const spaceInPx = spaceNeededMM / pxToMM;
+
+                    const spacer = document.createElement('div');
+                    spacer.className = 'pdf-page-spacer';
+                    spacer.style.height = spaceInPx + 'px';
+                    spacer.style.width = '100%';
+                    spacer.style.backgroundColor = '#ffffff';
+
+                    info.element.parentNode.insertBefore(spacer, info.element);
+                    spacers.push(spacer);
+                    cumulativeSpaceMM += spaceNeededMM;
+                }
+                return;
+            }
+
+            // 署名欄の直前のセクションはスペーサー追加をスキップ（署名欄を孤立させない）
+            if (nextIsSignature) {
+                return;
+            }
+
+            // 通常のセクション：ページをまたぐ場合は次のページへ
+            if (crossesPageBoundary && fitsOnOnePage) {
+                const spaceNeededMM = effectivePageHeightMM - positionInPage + 15;
+                const spaceInPx = spaceNeededMM / pxToMM;
+
+                const spacer = document.createElement('div');
+                spacer.className = 'pdf-page-spacer';
+                spacer.style.height = spaceInPx + 'px';
+                spacer.style.width = '100%';
+                spacer.style.backgroundColor = '#ffffff';
+
+                info.element.parentNode.insertBefore(spacer, info.element);
+                spacers.push(spacer);
+                cumulativeSpaceMM += spaceNeededMM;
+            }
+        });
+
         // html2canvasでキャプチャ
         const canvas = await html2canvas(content, {
             scale: 2,
@@ -163,6 +288,9 @@ async function exportPageToPDF(serviceName, autoClose = false) {
             height: content.scrollHeight
         });
 
+        // スペーサーを削除
+        spacers.forEach(spacer => spacer.remove());
+
         // 非表示にした要素を元に戻す
         if (backLink) backLink.style.display = '';
         if (pdfBtn) pdfBtn.style.display = '';
@@ -170,24 +298,24 @@ async function exportPageToPDF(serviceName, autoClose = false) {
 
         // jsPDFでPDF作成
         const { jsPDF } = window.jspdf;
-        const imgWidth = 210; // A4幅（mm）
+        const imgWidth = effectivePageWidthMM;
         const imgHeight = (canvas.height * imgWidth) / canvas.width;
-        const pageHeight = 297; // A4高さ（mm）
 
         const doc = new jsPDF('p', 'mm', 'a4');
+        const imgData = canvas.toDataURL('image/png');
         let heightLeft = imgHeight;
-        let position = 0;
+        let position = margin;
 
         // 最初のページ
-        doc.addImage(canvas.toDataURL('image/png'), 'PNG', 0, position, imgWidth, imgHeight);
-        heightLeft -= pageHeight;
+        doc.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+        heightLeft -= effectivePageHeightMM;
 
         // 複数ページ対応
         while (heightLeft > 0) {
-            position = heightLeft - imgHeight;
             doc.addPage();
-            doc.addImage(canvas.toDataURL('image/png'), 'PNG', 0, position, imgWidth, imgHeight);
-            heightLeft -= pageHeight;
+            position = margin - (imgHeight - heightLeft);
+            doc.addImage(imgData, 'PNG', margin, position, imgWidth, imgHeight);
+            heightLeft -= effectivePageHeightMM;
         }
 
         // PDFを保存
@@ -218,7 +346,7 @@ async function exportPageToPDF(serviceName, autoClose = false) {
     } finally {
         if (exportBtn) {
             exportBtn.disabled = false;
-            exportBtn.textContent = 'このページをPDF出力';
+            exportBtn.textContent = 'PDF出力';
         }
     }
 }

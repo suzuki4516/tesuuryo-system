@@ -49,11 +49,76 @@
             text-align: right;
             font-weight: bold;
         }
+        /* 割引コントロール */
+        .discount-controls {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+            margin-bottom: 20px;
+            padding: 15px;
+            background: #f5f5f5;
+            border-radius: 5px;
+        }
+        .discount-controls label {
+            font-weight: bold;
+        }
+        .discount-controls select {
+            padding: 8px 12px;
+            font-size: 14px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+        }
+        .discount-controls button {
+            padding: 8px 20px;
+            font-size: 14px;
+            background: #4a90d9;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+        .discount-controls button:hover {
+            background: #357abd;
+        }
+        .discount-note {
+            color: #c62828;
+            font-weight: bold;
+            margin-left: auto;
+        }
     </style>
 </head>
 <body>
     <div class="service-page">
         <a href="../index.html" class="back-link">← 一覧に戻る</a>
+
+        <!-- 割引コントロール（PDF出力時は非表示） -->
+        <div class="discount-controls" id="discount-controls">
+            <label for="page-discount-rate">%変更：</label>
+            <select id="page-discount-rate">
+                <option value="0">なし</option>
+                <option value="20">20%</option>
+                <option value="25">25%</option>
+                <option value="30">30%</option>
+                <option value="35">35%</option>
+                <option value="40">40%</option>
+                <option value="45">45%</option>
+                <option value="50">50%</option>
+                <option value="55">55%</option>
+                <option value="60">60%</option>
+                <option value="65">65%</option>
+                <option value="70">70%</option>
+                <option value="75">75%</option>
+                <option value="80">80%</option>
+            </select>
+            <button id="apply-discount-btn">自社利益適用</button>
+            <span class="discount-note" id="discount-note" style="display: none;">※割引適用中</span>
+            <button id="pdf-export-btn" style="background: #4a90d9; color: white; border: none; padding: 8px 20px; font-size: 14px; border-radius: 4px; cursor: pointer; margin-left: auto;">PDF出力</button>
+        </div>
+
+        <div class="contract-notice" style="margin: 20px 0; padding: 15px; background: #f9f9f9; border-left: 4px solid #333;">
+            <h3 style="margin: 0 0 10px 0; font-size: 16px; color: #333;">個別条件書</h3>
+            <p style="margin: 0; font-size: 14px; color: #555;">本書は営業委託基本契約書 第5条・第15条に基づくものとする。</p>
+        </div>
 
         <h1 class="service-title">Webシステム作成 手数料表</h1>
 
@@ -77,8 +142,19 @@
             まずはお気軽にご相談ください。ヒアリングの上、最適なプランとお見積りをご提案いたします。
         </p>
 
-        <div style="margin-top: 30px; text-align: center;">
-            <button id="pdf-export-btn" style="background: #4a90d9; color: white; border: none; padding: 12px 30px; font-size: 16px; border-radius: 5px; cursor: pointer;">このページをPDF出力</button>
+        <div class="signature-section" style="margin-top: 50px; padding: 30px; border: 1px solid #ddd; border-radius: 5px;">
+            <div style="margin-bottom: 40px;">
+                <p style="font-weight: bold; margin-bottom: 15px;">甲（委託者）</p>
+                <p style="margin: 10px 0;">住所：</p>
+                <p style="margin: 10px 0;">商号・氏名：</p>
+                <p style="margin: 10px 0;">代表者名：<span style="margin-left: 200px;">印</span></p>
+            </div>
+            <div>
+                <p style="font-weight: bold; margin-bottom: 15px;">乙（受託者）</p>
+                <p style="margin: 10px 0;">住所：</p>
+                <p style="margin: 10px 0;">商号・氏名：</p>
+                <p style="margin: 10px 0;">代表者名：<span style="margin-left: 200px;">印</span></p>
+            </div>
         </div>
     </div>
 
@@ -89,6 +165,18 @@
         // PDF出力ボタン
         document.getElementById('pdf-export-btn').addEventListener('click', function() {
             exportPageToPDF('Webシステム作成');
+        });
+
+        // 割引適用ボタン
+        document.getElementById('apply-discount-btn').addEventListener('click', function() {
+            const discount = parseInt(document.getElementById('page-discount-rate').value) || 0;
+            if (discount > 0) {
+                applyDiscountToPage(discount);
+                document.getElementById('discount-note').style.display = 'inline';
+                document.getElementById('discount-note').textContent = '※' + discount + '%自社利益適用中';
+                this.disabled = true;
+                this.textContent = '適用済み';
+            }
         });
     </script>
 </body>
